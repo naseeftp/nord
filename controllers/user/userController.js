@@ -437,47 +437,88 @@ searchQuery: req.query.query || "",
 
 
 
-const filterByPrice= async(req,res)=>{
-    try {
-        const user=req.session.user;
-        const userData=await User.findOne({_id:user});
-        const brands=await Brand.find({}).lean();
-        const categories=await Category.find({isListed:true}).lean();
-       
+
+const filterByPrice = async (req, res) => {
+  try {
+      const user = req.session.user;
+      const userData = await User.findOne({ _id: user });
+      const brands = await Brand.find({}).lean();
+      const categories = await Category.find({ isListed: true }).lean();
+
+ 
+      if (!req.query.gt || !req.query.lte) {
+          console.log("Missing query parameters:", req.query);
+          return res.status(400).render("shop", {
+              user: userData,
+              products: [],
+              category: categories,
+              brand: brands,
+              totalPages: 0,
+              currentPage: 1,
+              searchQuery: req.query.query || "",
+              error: "Price range parameters are missing"
+          });
+      }
+
+     
+      const gt = parseFloat(req.query.gt);
+      const lt = parseFloat(req.query.lte);
+
+
+      if (isNaN(gt) || isNaN(lt) || gt < 0 || lt < gt) {
+          console.log("Invalid query parameters:", { gt, lt });
+          return res.status(400).render("shop", {
+              user: userData,
+              products: [],
+              category: categories,
+              brand: brands,
+              totalPages: 0,
+              currentPage: 1,
+              searchQuery: req.query.query || "",
+              error: "Invalid price range"
+          });
+      }
+
       
-        let findProducts = await Product.find({
-          salePrice: { $gt: req.query.gt, $lt: req.query.lt },
+
+     
+      let findProducts = await Product.find({
+          salePrice: { $gt: gt, $lte: lt },
           isBlocked: false,
-         
           sizes: { $elemMatch: { quantity: { $gt: 0 } } }
       }).lean();
-        
-        findProducts.sort((a,b)=>new Date(b.createdOn)-new Date(a.createdOn));
 
-        let itemsPerage=6;
-        let currentPage=parseInt(req.query.page)||1;
-        let startIndex=(currentPage-1)*itemsPerage;
-        let endIndex=startIndex+itemsPerage;
-        let totalPages=Math.ceil(findProducts.length/itemsPerage);
-        const currentProduct=findProducts.slice(startIndex,endIndex);
-        req.session.filterProducts=findProducts;
+      console.log("Found products:", findProducts.length);
 
-        res.render("shop",{
-        user:userData,
-        products:currentProduct,
-        category:categories,
-        brand:brands,
-        totalPages,
-        currentPage,
-        searchQuery: req.query.query || "", 
-    })
-    } catch (error) {
-      console.log(error);
-      res.redirect("/pageNotFound")
-      
-    }
+     
+      findProducts.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
 
-}
+      const itemsPerPage = 6;
+      const currentPage = parseInt(req.query.page) || 1;
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const totalPages = Math.ceil(findProducts.length / itemsPerPage);
+      const currentProduct = findProducts.slice(startIndex, endIndex);
+
+      console.log("Current products for page:", currentProduct.length);
+
+     
+      req.session.filterProducts = findProducts;
+
+      res.render("shop", {
+          user: userData,
+          products: currentProduct,
+          category: categories,
+          brand: brands,
+          totalPages,
+          currentPage,
+          searchQuery: req.query.query || ""
+      });
+  } catch (error) {
+      console.error("Error in filterByPrice:", error);
+      res.redirect("/pageNotFound");
+  }
+};
 
 const searchProducts=async(req,res)=>{
     try {
