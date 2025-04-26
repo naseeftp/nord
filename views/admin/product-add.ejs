@@ -1,0 +1,608 @@
+<%- include("../../views/partials/admin/header") %>
+<head>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<style>
+   
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+   
+    .content-main {
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+   
+    .content-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+    }
+  
+    .form-control {
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 16px;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+  
+    .form-select {
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+    }
+   
+    .btn-md {
+        font-size: 16px;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+  
+    .btn-save {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+    .btn-save:hover {
+        background-color: #0056b3;
+    }
+ 
+    .btn-publish {
+        background-color: #28a745;
+        color: white;
+        border: none;
+    }
+    .btn-publish:hover {
+        background-color: #218838;
+    }
+  
+    .thumbnails-container {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    .thumbnail img {
+        width: 50px;
+        height: auto;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+  
+    .image-preview {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 2px solid #ddd;
+        padding: 5px;
+        background-color: white;
+    }
+
+
+    button[type="button"] {
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    background-color: #28a745; 
+    color: white;
+}
+
+button[type="button"]:hover {
+    background-color: #218838; 
+}
+
+button[type="button"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.6); 
+}
+
+button[type="button"]:disabled {
+    background-color: #6c757d; 
+    cursor: not-allowed;
+} 
+</style>
+
+
+
+<section class="content-main">
+    <div class="row">
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">Add New Product</h2>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+              
+                    <form method="post" action="/admin/addProducts" enctype="multipart/form-data" onsubmit="return validateForm()">
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Product Name</label>
+                            <input type="text" placeholder="Type here" name="productName" class="form-control border" id="product_name">
+                            <div id="productName-error" class="error-message"></div>
+                        </div>
+                    
+                        <div class="mb-4">
+                            <label class="form-label">Full description</label>
+                            <textarea placeholder="Type here" id="descriptionid" name="description" class="form-control border" rows="4"></textarea>
+                            <div id="description-error" class="error-message"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Regular price</label>
+                                    <input placeholder="$" name="regularPrice" type="text" class="form-control border">
+                                    <div id="regularPrice-error" class="error-message"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Sale price</label>
+                                    <input placeholder="$" name="salePrice" type="text" class="form-control border">
+                                </div>
+                                <div id="salePrice-error" class="error-message"></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4">
+                                  <div class="mb-4">
+                                    <label class="form-label">Size & Quantity</label>
+                                    <div class="d-flex flex-column gap-2">
+                                      <!-- Small Size -->
+                                      <div class="d-flex align-items-center gap-2">
+                                        <label for="sizeS" class="flex-shrink-0" style="width: 30px;">S</label>
+                                        <input type="number" id="sizeS" name="sizeQuantity[S]" class="form-control"  min="1" required>
+                                      </div>
+                                      <!-- Medium Size -->
+                                      <div class="d-flex align-items-center gap-2">
+                                        <label for="sizeM" class="flex-shrink-0" style="width: 30px;">M</label>
+                                        <input type="number" id="sizeM" name="sizeQuantity[M]" class="form-control"  min="1" required>
+                                      </div>
+                                      <!-- Large Size -->
+                                      <div class="d-flex align-items-center gap-2">
+                                        <label for="sizeL" class="flex-shrink-0" style="width: 30px;">L</label>
+                                        <input type="number" id="sizeL" name="sizeQuantity[L]" class="form-control" min="1" required>
+                                      </div>
+                                      <!-- Extra Large Size -->
+                                      <div class="d-flex align-items-center gap-2">
+                                        <label for="sizeXL" class="flex-shrink-0" style="width: 30px;">XL</label>
+                                        <input type="number" id="sizeXL" name="sizeQuantity[XL]" class="form-control" min="1" required>
+                                      </div>
+                                      <!-- Double Extra Large Size -->
+                                      <div class="d-flex align-items-center gap-2">
+                                        <label for="sizeXXL" class="flex-shrink-0" style="width: 30px;">XXL</label>
+                                        <input type="number" id="sizeXXL" name="sizeQuantity[XXL]" class="form-control"  min="1" required>
+                                      </div>
+                                    </div>
+                                    <div id="size-error" class="error-message"></div>
+                                  </div>
+                                </div>
+                              </div>
+                              
+
+                        
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Color</label>
+                                    <input name="color" type="text" class="form-control border">
+                                </div>
+                                <div id="color-error" class="error-message"></div>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row gx-2">
+                                    <div class="col-sm-6 mb-3">
+                                        <label class="form-label">Category</label>
+                                        <select class="form-select border" style="width: 150px;" name="category">
+                                            <% for(let i=0; i<cat.length; i++){ %>
+                                                <option value="<%= cat[i].name %>"><%= cat[i].name %></option>
+                                            <% } %>
+                                        </select>
+                                        <div id="category-error" class="error-message"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-header">
+                                <h4>Choose images</h4>
+                            </div>
+                            <div class="border row">
+                                <div id="addedImagesContainer" class="thumbnails-container"></div>
+                            </div>
+                            <div class="row">
+                                <div class="card-body align-items-center" style="margin-bottom: 20px;">
+                                    <img src="" alt="" id="imgView1">
+                                    <input class="form-control" type="file" name="images" id="input1"
+                                        accept="image/png, image/jpeg, image/jpg,image/webp"
+                                        onchange="validateImageformat(this,1,event)">
+                                    <div id="images-error" class="error-message"></div>
+                                </div>
+                                <div class="image-cropper d-flex align-items-center" style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
+                                    <img src="" id="croppedImg1" alt="">
+                                    <button type="button" id="saveButton1">Save</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="card-body align-items-center" style="margin-bottom: 20px;">
+                                    <img src="" alt="" id="imgView2">
+                                    <input class="form-control" type="file" name="images" id="input2"
+                                        accept="image/png, image/jpeg, image/jpg,image/webp"
+                                        onchange="validateImageformat(this,2,event)">
+                                </div>
+                                <div class="image-cropper d-flex align-items-center" style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
+                                    <img src="" id="croppedImg2" alt="">
+                                    <button type="button" id="saveButton2">Save</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="card-body align-items-center" style="margin-bottom: 20px;">
+                                    <img src="" alt="" id="imgView3">
+                                    <input class="form-control" type="file" name="images" id="input3"
+                                        accept="image/png, image/jpeg, image/jpg,image/webp"
+                                        onchange="validateImageformat(this,3,event)">
+                                </div>
+                                <div class="image-cropper d-flex align-items-center" style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
+                                    <img src="" id="croppedImg3" alt="">
+                                    <button type="button" id="saveButton3">Save</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="card-body align-items-center" style="margin-bottom: 20px;">
+                                    <img src="" alt="" id="imgView4">
+                                    <input class="form-control" type="file" name="images" id="input4"
+                                        accept="image/png, image/jpeg, image/jpg,image/webp"
+                                        onchange="validateImageformat(this,4,event)">
+                                </div>
+                                <div class="image-cropper d-flex align-items-center" style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
+                                    <img src="" id="croppedImg4" alt="">
+                                    <button type="button" id="saveButton4">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                           
+                            <button class="btn btn-md rounded font-sm hover-up btn-publish" type="button" onclick="validateAndSubmit()">Publish</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+ </section>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+ <script>
+    async function validateAndSubmit() {
+    clearErrorMessages();
+
+    const publishButton = document.querySelector('.btn-publish');
+    publishButton.disabled = true;
+
+    if (validateForm()) {
+        const form = document.forms[0];
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/admin/addProducts', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                Swal.fire({
+                    title: 'Product Added!',
+                    text: 'Your product has been added successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/admin/products';
+                    }
+                });
+            } else {
+                if (result.swalError) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: result.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: result.error || 'There was an error adding the product.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Error adding product:", error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'An unexpected error occurred.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        } finally {
+            publishButton.disabled = false;
+        }
+    } else {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Please correct the errors in the form.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+        publishButton.disabled = false;
+    }
+}
+ </script>
+
+<script>
+//    function validateAndSubmit() {
+//     setEmptySizeInputsToZero();
+//     if (validateForm()) {
+//         document.querySelector('form').submit();
+//     }
+// }
+
+function validateImageformat(input,index,event){
+const validTypes=['image/jpeg','image/png','image/jpg','image/webp'];
+if(input.files.length>0){
+const file=input.files[0];
+if(!validTypes.includes(file.type)){
+Swal.fire({
+title:'invalid file format',
+text:'please uploads only images(JPEG, JPG, PNG, or WEBP)',
+icon:'error',
+confirmButtonText:'OK',
+
+});
+input.value='';
+return false;
+
+}
+switch(index) {
+            case 1: viewImage1(event); viewImage(event, 1); break;
+            case 2: viewImage2(event); viewImage(event, 2); break;
+            case 3: viewImage3(event); viewImage(event, 3); break;
+            case 4: viewImage4(event); viewImage(event, 4); break;
+        }
+
+}
+return  true
+
+}
+
+
+function validateForm() {
+    clearErrorMessages();
+    const name = document.getElementsByName('productName')[0].value;
+    const description = document.getElementById('descriptionid').value;
+    const price = document.getElementsByName('regularPrice')[0].value;
+    const saleprice = document.getElementsByName('salePrice')[0].value;
+    const color = document.getElementsByName('color')[0].value;
+    const category = document.getElementsByName('category')[0].value;
+    
+    const sizeInputs = document.querySelectorAll('input[name^="sizeQuantity"]');
+
+    const images = [
+        document.getElementById('input1').files.length,
+        document.getElementById('input2').files.length,
+        document.getElementById('input3').files.length,
+        document.getElementById('input4').files.length
+    ];
+
+    let isValid = true;
+    let sizeSelected = false;
+
+
+    if (name.trim() === "") {
+        displayErrorMessage('productName-error', 'Please enter a product name.');
+        isValid = false;
+    } else if (!/^[a-zA-Z\s]+$/.test(name.trim())) {
+        displayErrorMessage('productName-error', 'Product name should contain only alphabetic characters.');
+        isValid = false;
+    }
+
+    if (description.trim() === "") {
+        displayErrorMessage('description-error', 'Please enter a product description.');
+        isValid = false;
+    } else if (!/^[a-zA-Z0-9\s.,'-]+$/.test(description.trim())) {
+        displayErrorMessage('description-error', 'Product description contains invalid characters.');
+        isValid = false;
+    }
+
+  
+    if (!/^\d+(\.\d{1,2})?$/.test(price) || parseFloat(price) < 0) {
+        displayErrorMessage('regularPrice-error', 'Please enter a valid non-negative price.');
+        isValid = false;
+    }
+
+    if (saleprice.trim() === "") {
+    displayErrorMessage('salePrice-error', 'Please enter a sale price.');
+    isValid = false;
+} else if (!/^\d+(\.\d{1,2})?$/.test(saleprice) || parseFloat(saleprice) < 0) {
+    displayErrorMessage('salePrice-error', 'Please enter a valid non-negative sale price.');
+    isValid = false;
+} 
+
+
+ if (color.trim() === "") {
+        displayErrorMessage('color-error', 'Please enter a color.');
+        isValid = false;
+    }
+
+   
+    const uploadedImageCount = images.filter(count => count > 0).length;
+    if (uploadedImageCount < 3) {
+        displayErrorMessage("images-error", 'Please upload at least 3 images.');
+        isValid = false;
+    }
+
+
+    sizeInputs.forEach(input => {
+        if (input.value.trim() !== "" && parseInt(input.value) > 0) {
+            sizeSelected = true;
+        }
+    });
+
+    if (!sizeSelected) {
+        displayErrorMessage('size-error', 'Please enter quantity for at least one size.');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function displayErrorMessage(elementId, message) {
+    var errorElement = document.getElementById(elementId);
+    if (errorElement) {
+        errorElement.innerText = message;
+        errorElement.style.display = "block";
+    }
+}
+
+function clearErrorMessages() {
+    const errorElements = document.getElementsByClassName('error-message');
+    Array.from(errorElements).forEach(element => {
+        element.innerText = '';
+        element.style.display = 'none';
+    });
+}
+
+function setEmptySizeInputsToZero() {
+    const sizeInputs = document.querySelectorAll('input[name^="sizeQuantity"]');
+    sizeInputs.forEach(input => {
+        if (input.value.trim() === "") {
+            input.value = "0";
+        }
+    });
+}
+
+</script>
+
+ <script>
+     function viewImage1(event) {
+         document.getElementById("imgView1").src = URL.createObjectURL(event.target.files[0]);
+     }
+     function viewImage2(event) {
+         document.getElementById("imgView2").src = URL.createObjectURL(event.target.files[0]);
+     }
+     function viewImage3(event) {
+         document.getElementById("imgView3").src = URL.createObjectURL(event.target.files[0]);
+     }
+     function viewImage4(event) {
+         document.getElementById("imgView4").src = URL.createObjectURL(event.target.files[0]);
+     }
+ 
+     function viewImage(event, index) {
+        if(!event.target.files||!event.target.files[0]) return
+         let input = event.target;
+         let reader = new FileReader();
+        
+         reader.onload = function() {
+             let dataUrl = reader.result;
+             let image = document.getElementById("imgView" + index);
+             image.src = dataUrl;
+             let cropper = new Cropper(image, {
+                 aspectRatio: 1,
+                 viewMode: 1,
+                 guides: true,
+                 background: false,
+                 autoCropArea: 1,
+                 zoomable: true
+             });
+             let cropperContainer = document.querySelector("#croppedImg" + index).parentNode;
+             cropperContainer.style.display = 'block';
+             let saveButton = document.querySelector("#saveButton" + index);
+             saveButton.addEventListener('click', function() {
+                 let croppedCanvas = cropper.getCroppedCanvas();
+                 let croppedImage = document.getElementById("croppedImg" + index);
+                 croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+                 let timestamp = new Date().getTime();
+                 let fileName = `cropped-img-${timestamp}-${index}.png`;
+                 croppedCanvas.toBlob(blob => {
+                     let input = document.getElementById('input' + index);
+                     let imgFile = new File([blob], fileName, { type: blob.type });
+                     const dataTransfer = new DataTransfer();
+                     dataTransfer.items.add(imgFile);
+                     input.files = dataTransfer.files;
+                 });
+                 let previewImage = document.getElementById("imgView" + index);
+                 previewImage.style.display = 'none';
+                 cropperContainer.style.display = 'none';
+                 cropper.destroy();
+             }, { once: true });
+         };
+         reader.readAsDataURL(input.files[0]);
+     }
+ 
+     const selectedImages = [];
+     document.getElementById('input1').addEventListener("change", handleFileSelect);
+     function handleFileSelect(event) {
+         const addedImagesContainer = document.getElementById("addedImagesContainer");
+         addedImagesContainer.innerHTML = '';
+         const files = event.target.files;
+         for (let i = 0; i < files.length; i++) {
+             const file = files[i];
+             selectedImages.push(file);
+             const thumbnail = document.createElement("div");
+             thumbnail.classList.add("thumbnail");
+             const img = document.createElement("img");
+             img.src = URL.createObjectURL(file);
+             img.alt = "thumbnail";
+             img.style.width = "50px";
+             img.style.height = "auto";
+             const removeIcon = document.createElement("span");
+             removeIcon.classList.add("remove-icon");
+             removeIcon.innerHTML = "&times;";
+             removeIcon.addEventListener('click', function() {
+                 const index = selectedImages.indexOf(file);
+                 if (index !== -1) {
+                     selectedImages.splice(index, 1);
+                 }
+                 thumbnail.remove();
+             });
+             thumbnail.appendChild(img);
+             thumbnail.appendChild(removeIcon);
+             addedImagesContainer.appendChild(thumbnail);
+         }
+     }
+ </script>
+ <%- include("../../views/partials/admin/footer") %>
+
+
+
+

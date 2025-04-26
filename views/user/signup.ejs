@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup | Nord E-commerce</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #212121;
+        }
+        
+        .signup-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 350px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .signup-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #000;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .signup-header {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .signup-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.2rem;
+        }
+        
+        .signup-header p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .input-group {
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: white;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            color: #212121;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .input-field:focus {
+            border-color: #000;
+            outline: none;
+        }
+        
+        .input-field::placeholder {
+            color: #999;
+            font-size: 0.85rem;
+        }
+        
+        .errormessage {
+            color: #ff3333;
+            font-size: 0.7rem;
+            margin-top: 3px;
+            display: none;
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            user-select: none;
+            font-size: 0.9rem;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+        
+        .signup-btn, .google-btn {
+            padding: 10px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .signup-btn {
+            background: #000;
+            color: #fff;
+        }
+        
+        .signup-btn:hover {
+            background: #333;
+        }
+        
+        .google-btn {
+            background: white;
+            color: #000;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .google-btn:hover {
+            background: #f5f5f5;
+            border-color: #d0d0d0;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 0.8rem 0;
+            color: #666;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        
+        .divider span {
+            padding: 0 0.8rem;
+            font-size: 0.8rem;
+        }
+        
+        .login-link {
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            text-align: center;
+            color: #666;
+        }
+        
+        .login-link a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .optional-label {
+            color: #999;
+            font-size: 0.7rem;
+            font-style: italic;
+        }
+        
+        svg {
+            width: 14px;
+            height: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-header">
+            <h2>Create Account</h2>
+            <p>Join Nord E-commerce</p>
+        </div>
+        
+        <form id="signupform" method="post" action="/signup">
+            <div id="existerror" class="errormessage"></div>
+            
+            <div class="input-group">
+                <input type="text" class="input-field" placeholder="Full Name" id="name" name="name">
+                <div id="nameerror" class="errormessage"></div>
+            </div>
+            
+            <div class="input-group">
+                <input  class="input-field" placeholder="Email Address" id="email" name="email">
+                <div id="emailerror" class="errormessage"></div>
+            </div>
+            
+            <div class="input-group">
+                <input type="tel" class="input-field" placeholder="Phone Number" id="phone" name="phone">
+                <div id="phoneerror" class="errormessage"></div>
+            </div>
+            
+            <div class="input-group">
+                <div class="password-container">
+                    <input type="password" class="input-field" placeholder="Password" name="password" id="password">
+                    <span id="togglePassword" class="toggle-password">👁️</span>
+                </div>
+                <div id="passworderror" class="errormessage"></div>
+            </div>
+            
+            <div class="input-group">
+                <div class="password-container">
+                    <input type="password" class="input-field" placeholder="Confirm Password" id="confirm" name="Confirm">
+                    <span id="toggleConfirmPassword" class="toggle-password">👁️</span>
+                </div>
+                <div id="confirmerror" class="errormessage"></div>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" class="input-field" placeholder="Referral Code" id="referralCode" name="referralCode">
+                <span class="optional-label">Optional</span>
+                <div id="referralCodeError" class="errormessage"></div>
+            </div>
+            
+            <% if (locals.message && message.length > 0) { %>
+                <div class="alert alert-danger text-center">
+                  <%= message %>
+                </div>
+            <% } %>
+            
+            <div class="button-group">
+                <button type="submit" class="signup-btn">Sign Up</button>
+                <div class="divider"><span>OR</span></div>
+                <a href="/auth/google" class="google-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                    </svg>
+                    Google
+                </a>
+            </div>
+            
+            <p class="login-link">Have an account? <a href="login">Log in</a></p>
+        </form>
+    </div>
+</body>
+</html>
+
+<script>
+
+const nameid = document.getElementById("name");
+        const emailid = document.getElementById("email");
+        const phoneid = document.getElementById("phone");
+        const passwordid = document.getElementById("password");
+        const confirmid = document.getElementById("confirm");
+
+        const nameerror = document.getElementById("nameerror");
+        const emailerror = document.getElementById("emailerror");
+        const phoneerror = document.getElementById("phoneerror");
+        const passworderror = document.getElementById("passworderror");
+        const confirmerror = document.getElementById("confirmerror");
+        const existerror = document.getElementById("existerror");
+
+        const signupform = document.getElementById("signupform");
+
+        const togglePassword = document.getElementById("togglePassword");
+        const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+
+      
+        function nameValidatechecking() {
+            const nameval = nameid.value.trim();
+            const namepattern = /^[A-Za-z\s]+$/;
+
+            if (nameval === "") {
+                nameerror.style.display = "block";
+                nameerror.innerHTML = "Please enter a valid name";
+                return false;
+            } else if (!namepattern.test(nameval)) {
+                nameerror.style.display = "block";
+                nameerror.innerHTML = "Name can only contain alphabets and spaces";
+                return false;
+            } else {
+                nameerror.style.display = "none";
+                nameerror.innerHTML = "";
+                return true;
+            }
+        }
+
+      
+        function emailValidatechecking() {
+            const emailval = emailid.value.trim();
+            const emailpattern = /^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+
+            if (emailval === "") {
+                emailerror.style.display = "block";
+                emailerror.innerHTML = "Please enter a valid email";
+                return false;
+            } else if (!emailpattern.test(emailval)) {
+                emailerror.style.display = "block";
+                emailerror.innerHTML = "Invalid email format";
+                return false;
+            } else {
+                emailerror.style.display = "none";
+                emailerror.innerHTML = "";
+                return true;
+            }
+        }
+
+                    
+              function phoneValidatechecking() {
+                    const phoneval = phoneid.value.trim();
+                    const phonePattern = /^[6-9]\d{9}$/;
+
+                    if (phoneval === "") {
+                        phoneerror.style.display = "block";
+                        phoneerror.innerHTML = "Please enter a valid phone number";
+                        return false;
+                    } else if (!phonePattern.test(phoneval)) {
+                        phoneerror.style.display = "block";
+                        phoneerror.innerHTML = "Enter a valid 10-digit phone number ";
+                        return false;
+                    } else if (/^(\d)\1{9}$/.test(phoneval)) {
+                        phoneerror.style.display = "block";
+                        phoneerror.innerHTML = "Phone number cannot have all identical digits";
+                        return false;
+                    } else {
+                        phoneerror.style.display = "none";
+                        phoneerror.innerHTML = "";
+                        return true;
+                    }
+                }
+
+
+      
+        function passwordValidatechecking() {
+            const passval = passwordid.value.trim();
+            const confirmval = confirmid.value.trim();
+            const alpha = /[a-zA-Z]/;
+            const digit = /\d/;
+
+            if (passval.length < 8) {
+                passworderror.style.display = "block";
+                passworderror.innerHTML = "Password should contain at least 8 characters";
+                return false;
+            } else if (!alpha.test(passval) || !digit.test(passval)) {
+                passworderror.style.display = "block";
+                passworderror.innerHTML = "Password should contain atleast one capital letter and a special charactor";
+                return false;
+            } else {
+                passworderror.style.display = "none";
+                passworderror.innerHTML = "";
+            }
+
+            if (passval !== confirmval) {
+                confirmerror.style.display = "block";
+                confirmerror.innerHTML = "Passwords do not match";
+                return false;
+            } else {
+                confirmerror.style.display = "none";
+                confirmerror.innerHTML = "";
+                return true;
+            }
+        }
+
+    
+        function toggleVisibility(inputField, toggleButton) {
+            toggleButton.addEventListener("click", function () {
+                if (inputField.type === "password") {
+                    inputField.type = "text";
+                    toggleButton.textContent = "👁️‍🗨️"; 
+                } else {
+                    inputField.type = "password";
+                    toggleButton.textContent = "👁️"; 
+                }
+            });
+        }
+
+        toggleVisibility(passwordid, togglePassword);
+        toggleVisibility(confirmid, toggleConfirmPassword);
+
+      
+        signupform.addEventListener("submit", function (e) {
+            let isValid = nameValidatechecking() && emailValidatechecking() && phoneValidatechecking() && passwordValidatechecking();
+            if (!isValid) {
+                e.preventDefault(); s
+            }
+        });
+
+
+</script>

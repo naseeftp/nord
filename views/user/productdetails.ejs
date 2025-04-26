@@ -1,0 +1,559 @@
+<%- include("../../views/partials/user/header") %>
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px; /* Reduced container width */
+    margin: 0 auto;
+    padding: 15px;
+}
+
+/* Breadcrumb Navigation */
+.page-header {
+    background-color: transparent;
+    padding: 15px 0;
+    border-bottom: 1px solid #eaeaea;
+    margin-bottom: 20px;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #666;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #4a4a4a;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.breadcrumb a:hover {
+    color: #000; /* Changed from #ff3f6c to black */
+}
+
+.breadcrumb-separator {
+    margin: 0 12px;
+    color: #ccc;
+    font-size: 14px;
+}
+
+.breadcrumb-current {
+    color: #888;
+    font-weight: 400;
+}
+
+/* Product Detail Section */
+.product-detail {
+    background-color: white;
+    border-radius: 8px; /* Reduced radius */
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* Image Gallery */
+.detail-gallery {
+    position: relative;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.product-image-container {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 350px; /* Reduced image size */
+    margin: 0 auto;
+}
+
+.product-image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 6px;
+    transition: transform 0.4s ease;
+}
+
+.product-image-container:hover img {
+    transform: scale(1.02);
+}
+
+/* Magnifier Lens */
+.magnifier {
+    position: absolute;
+    width: 120px; /* Reduced size */
+    height: 120px; /* Reduced size */
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0.5); /* Changed from rose to black */
+    background-repeat: no-repeat;
+    background-size: 700px 700px;
+    display: none;
+    pointer-events: none;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+}
+
+/* Thumbnails */
+.slider-nav-thumbnails {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.slider-nav-thumbnails img {
+    width: 60px; /* Reduced thumbnail size */
+    height: 60px; /* Reduced thumbnail size */
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+    object-fit: cover;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.slider-nav-thumbnails img:hover {
+    border-color: #000; /* Changed from #ff3f6c to black */
+    transform: translateY(-2px);
+}
+
+.slider-nav-thumbnails img.active {
+    border-color: #000; /* Changed from #ff3f6c to black */
+}
+
+/* Product Info */
+.detail-info {
+    padding: 5px 10px;
+}
+
+.product-title {
+    font-size: 24px; /* Reduced size */
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #222;
+    line-height: 1.2;
+}
+
+.product-offer {
+    display: inline-block;
+    background-color: #000; /* Changed from #ff3f6c to black */
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.product-price {
+    font-size: 22px; /* Reduced size */
+    font-weight: 700;
+    color: #111;
+    margin: 12px 0;
+}
+
+.product-price ins {
+    text-decoration: none;
+}
+
+.product-price .text-brand {
+    color: #000; /* Changed from #ff3f6c to black */
+}
+
+.product-price .original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 16px; /* Reduced size */
+    margin-left: 8px;
+}
+
+.product-description {
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+/* Size Selector - Redesigned */
+.size-selector {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.size-selector p {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+/* New design for size options - more compact */
+.size-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border: 1px solid #eaeaea;
+    border-radius: 6px;
+    background-color: white;
+    margin-bottom: 8px;
+    transition: all 0.25s ease;
+}
+
+.size-option:hover {
+    border-color: #000; /* Changed from #ff3f6c to black */
+    transform: translateX(3px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.size-option label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+.size-option input {
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: #000; /* Changed from #ff3f6c to black */
+    width: 16px;
+    height: 16px;
+}
+
+.size-option span {
+    font-weight: 500;
+    color: #555;
+}
+
+.availability-tag {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Buttons */
+.button-add-to-cart {
+    background-color: #000 !important; /* Changed from #ff3f6c to black */
+    color: white !important;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 15px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button-add-to-cart:hover {
+    background-color: #333 !important; /* Changed from #e63056 to dark gray */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+.button-wishlist {
+    background-color: white !important;
+    color: #000 !important; /* Changed from #ff3f6c to black */
+    border: 2px solid #000 !important; /* Changed from #ff3f6c to black */
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-wishlist:hover {
+    background-color: #f5f5f5 !important; /* Changed from #fff5f7 */
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.button-wishlist i {
+    margin-right: 8px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .product-detail {
+        padding: 15px 10px;
+    }
+    
+    .product-title {
+        font-size: 20px;
+    }
+    
+    .button-add-to-cart,
+    .button-wishlist {
+        width: 100%;
+        margin: 6px 0;
+    }
+}
+</style>
+
+<main class="main">
+    <!-- Breadcrumb Navigation -->
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/" class="breadcrumb-link" rel="nofollow">Home</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="/shop" class="breadcrumb-link">Shop</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current"><%= product.productName %></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Section -->
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product-detail">
+                        <div class="row">
+                            <!-- Product Images Gallery -->
+                            <div class="col-md-6">
+                                <div class="detail-gallery">
+                                    <div class="product-image-container" id="product-image-container">
+                                        <img id="main-product-image" src="/uploads/re-image/<%= product.productImage[0] %>" alt="<%= product.productName %>">
+                                        <div id="magnifier" class="magnifier"></div>
+                                    </div>
+                                    <div class="slider-nav-thumbnails">
+                                        <% for (let i = 0; i < product.productImage.length; i++) { %>
+                                            <img class="thumbnail <%= i === 0 ? 'active' : '' %>" 
+                                                 src="/uploads/re-image/<%= product.productImage[i] %>" 
+                                                 alt="<%= product.productName %> - view <%= i+1 %>" 
+                                                 data-src="/uploads/re-image/<%= product.productImage[i] %>">
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Information -->
+                            <div class="col-md-6">
+                                <div class="detail-info">
+                                    <h2 class="product-title"><%= product.productName %></h2>
+                                    
+                                    <% if (product.productOffer > 0) { %>
+                                        <span class="product-offer"><%= product.productOffer %>% OFF</span>
+                                    <% } %>
+                                    
+                                    <div class="product-price">
+                                        <ins><span class="text-brand">₹<%= product.salePrice.toLocaleString('en-IN') %></span></ins>
+                                        <% if (product.regularPrice && product.regularPrice > product.salePrice) { %>
+                                            <span class="original-price">₹<%= product.regularPrice.toLocaleString('en-IN') %></span>
+                                        <% } %>
+                                    </div>
+                                    
+                                    <p class="product-description"><%= product.description %></p>
+
+                                    <!-- Size & Quantity Selector -->
+                                    <div class="size-selector">
+                                        <p>Select Size & Quantity</p>
+                                        <% if (sizes && sizes.length > 0) { %>
+                                            <% sizes.forEach(size => { %>
+                                                <div class="size-option">
+                                                    <label>
+                                                        <input type="radio" name="size-<%= product._id %>" value="<%= size.size %>">
+                                                        <span><%= size.size.toUpperCase() %></span>
+                                                    </label>
+                                                    <span class="availability-tag">Available: <%= size.quantity %></span>
+                                                </div>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <div class="no-sizes">
+                                                <p>No sizes available for this product.</p>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                    
+                                    <!-- Action Buttons -->
+                                    <div class="product-actions">
+                                        <button class="button-add-to-cart" onclick="addToCart('<%= product._id %>')">
+                                            Add to Cart
+                                        </button>
+                                        <button class="button-wishlist" onclick="addToWishList('<%= product._id %>')">
+                                            <i class="fi-rs-heart"></i> Add to Wishlist
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const productImage = document.getElementById("main-product-image");
+    const magnifier = document.getElementById("magnifier");
+    const productImageContainer = document.getElementById("product-image-container");
+
+    productImageContainer.addEventListener("mousemove", function (e) {
+        const { left, top, width, height } = productImageContainer.getBoundingClientRect();
+        const mouseX = e.clientX - left;
+        const mouseY = e.clientY - top;
+
+
+        magnifier.style.display = "block";
+        magnifier.style.left = `${mouseX - 75}px`;
+        magnifier.style.top = `${mouseY - 75}px`;
+
+        const backgroundPosX = (mouseX / width) * 100;
+        const backgroundPosY = (mouseY / height) * 100;
+        magnifier.style.backgroundPosition = `${backgroundPosX}% ${backgroundPosY}%`;
+    });
+
+    productImageContainer.addEventListener("mouseleave", function () {
+        magnifier.style.display = "none";
+    });
+
+ 
+    function updateMagnifierImage(imageSrc) {
+        magnifier.style.backgroundImage = `url('${imageSrc}')`;
+    }
+
+    updateMagnifierImage(productImage.src);
+
+  
+    document.querySelectorAll(".thumbnail").forEach(thumbnail => {
+        thumbnail.addEventListener("click", function () {
+            const newImageSrc = this.getAttribute("data-src");
+            productImage.src = newImageSrc;
+            updateMagnifierImage(newImageSrc);
+        });
+    });
+});
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+function addToCart(productId) {
+    const selectedSize = document.querySelector(`input[name="size-${productId}"]:checked`);
+
+    if (!selectedSize) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Please select a size',
+            text: 'You need to select a size before adding to cart.'
+        });
+        return;
+    }
+
+    $.ajax({
+        url: "/addToCart",
+        method: "POST",
+        data: { 
+            productId: productId,
+            selectedSize: selectedSize.value  // Pass the selected size
+        },
+        success: (response) => {
+            if (response.status === true) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added to Cart!',
+                    text: 'The product has been added to your cart.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: response.status
+                });
+            }
+        },
+        error: () => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Error adding product to cart.'
+            });
+        },
+    });
+}
+</script>
+
+
+<script>
+ function addToWishList(productId) {
+    $.ajax({
+      url: '/addTowishlist',
+      method: 'POST',
+      data: { productId: productId },
+      success: (response) => { 
+        if (response.status) {
+          Swal.fire({
+            title: 'Added To Wishlist',
+            text: 'Product has been added to your wishlist',
+            icon: 'success',
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            title: 'Already in Wishlist',
+            text: response.message,
+            icon: 'warning', 
+            timer: 2000,
+          });
+        }
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'There was an error adding the product to your wishlist',
+          icon: 'error',
+          timer: 2000,
+        });
+      },
+    });
+  }
+
+
+</script>
+
+
+
+<%- include("../../views/partials/user/footer") %>
+
+
+
+
+

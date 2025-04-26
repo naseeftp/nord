@@ -1,0 +1,291 @@
+
+<%- include("../../views/partials/user/header") %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <style>
+    :root {
+      --primary-color: #4a6cf7;
+      --secondary-color: #6c757d;
+      --success-color: #28a745;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+      --border-color: #dee2e6;
+      --border-radius: 8px;
+      --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Header Styles */
+    header {
+      background-color: white;
+      box-shadow: var(--box-shadow);
+      padding: 1rem 2rem;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    /* Layout */
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 250px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin-right: 2rem;
+      padding: 1.5rem;
+      height: fit-content;
+    }
+
+    .nav-menu {
+      list-style: none;
+    }
+
+    .nav-menu li {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .nav-menu li:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: var(--dark-color);
+      font-weight: 500;
+      transition: color 0.3s;
+      display: block;
+      padding: 0.5rem 0;
+    }
+
+    .nav-menu a:hover {
+      color: var(--primary-color);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+    }
+
+    .profile-container {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+    }
+
+    .profile-header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .profile-header h1 {
+      font-size: 1.8rem;
+      color: var(--dark-color);
+    }
+
+    .profile-info {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .profile-info {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .info-item {
+      margin-bottom: 1rem;
+    }
+
+    .info-label {
+      font-size: 0.875rem;
+      color: var(--secondary-color);
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .actions {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #3a5bd9;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(74, 108, 247, 0.1);
+    }
+
+    /* Footer */
+    footer {
+      background-color: white;
+      border-top: 1px solid var(--border-color);
+      padding: 1.5rem 0;
+      margin-top: 3rem;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      text-align: center;
+      color: var(--secondary-color);
+      font-size: 0.875rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 2rem;
+      }
+      
+      .nav-menu {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      
+      .nav-menu li {
+        margin-right: 1rem;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+      <ul class="nav-menu">
+        <li><a href="/userProfile">Profile</a></li>
+        <li><a href="/useraddress">My Address</a></li>
+        <li><a href="/orders">Orders</a></li>
+        <li><a href="/wallet">Wallet</a></li>
+        <li><a href="/wallethistory">wallet history</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
+
+ 
+    <div class="main-content">
+      <div class="profile-container">
+        <div class="profile-header">
+          <h1>User Profile</h1>
+        </div>
+
+        <div class="profile-info">
+          <div class="info-item">
+            <div class="info-label">Name</div>
+            <div class="info-value"><%= user.name %></div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Phone</div>
+            <div class="info-value"><%= user.phone %></div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value"><%= user.email %></div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Referral Code</div>
+            <div class="info-value"><%= user.referralCode %></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a href="/change-email" class="btn btn-primary">Change Email</a>
+          <% if (!user.googleId) { %>
+            <a href="/change-password" class="btn btn-outline">Change Password</a>
+          <% } %>
+          <a href="/editProfile" class="btn btn-outline">Edit Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+</html>
+<%- include("../../views/partials/user/footer") %>

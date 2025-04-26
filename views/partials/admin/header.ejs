@@ -1,0 +1,149 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Nord Admin</title>
+            
+            <!-- Tailwind CSS -->
+            <script src="https://cdn.tailwindcss.com"></script>
+            <!-- Bootstrap CSS (Head Section) -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css"/>
+            <!-- FontAwesome -->
+            <script src="https://kit.fontawesome.com/16d4885483.js" crossorigin="anonymous"></script>
+            <link rel="shortcut icon" type="image/x-icon" href="#">
+            <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.css">
+        <script src="https://kit.fontawesome.com/16d4885483.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        
+            <style>
+                /* Fixed Sidebar */
+                .sidebar {
+                    background-color: #f8f9fa;
+                    width: 250px;
+                    height: 100vh;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    overflow-y: auto; /* Allow scrolling in sidebar if needed */
+                    transition: transform 0.3s ease-in-out;
+                }
+        
+                /* Sidebar links */
+                .sidebar a {
+                    display: block;
+                    padding: 12px 20px;
+                    color: #333;
+                    transition: background 0.3s ease-in-out;
+                }
+        
+                .sidebar a:hover,
+                .sidebar a.active {
+                    background-color: #4a90e2;
+                    color: white;
+                }
+        
+                /* Overlay (for mobile) */
+                #overlay {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 10;
+                }
+        
+                /* Adjust Main Content */
+                main {
+                    margin-left: 250px; /* Leave space for sidebar */
+                    flex: 1;
+                    overflow-y: auto; /* Allow scrolling */
+                    height: 100vh;
+                    padding: 20px;
+                    margin-top: 70px;
+                }
+        
+                /* Responsive Sidebar for Mobile */
+                @media (max-width: 1024px) {
+                    .sidebar {
+                        transform: translateX(-100%);
+                        position: fixed;
+                        z-index: 20;
+                    }
+                }
+        
+            </style>
+        </head>
+        <body class="bg-gray-100">
+        
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+            <!-- Sidebar -->
+            <aside id="sidebar" class="sidebar shadow-lg lg:translate-x-0 ">
+                <div class=" mb-8 p-5">
+                    <h1 class="font-bold left-0">NORD</h1>
+                </div>
+                <nav>
+                    <ul class="space-y-4">
+                        <li><a href="/admin" class="flex items-center p-2"><i class="fas fa-home mr-3"></i> Dashboard</a></li>
+                        <li><a href="/admin/users" class="flex items-center p-2"><i class="fas fa-user mr-3"></i> Customers</a></li>
+                        <li><a href="/admin/category" class="flex items-center p-2"><i class="fas fa-list mr-3"></i> Category</a></li>
+                        <li><a href="/admin//transactions" class="flex items-center p-2"><i class="fas fa-star mr-3"></i> Transactions</a></li>
+                        <li><a href="/admin/addProducts" class="flex items-center p-2"><i class="fas fa-shopping-bag mr-3"></i> add Products</a></li>
+                        <li><a href="/admin/products" class="flex items-center p-2"><i class="fas fa-tags mr-3"></i> Products</a></li>
+                        <li><a href="/admin/coupon" class="flex items-center p-2"><i class="fas fa-image mr-3"></i> coupon</a></li>
+                        <li><a href="/admin/orderList" class="flex items-center p-2"><i class="fas fa-shopping-cart mr-3"></i> Orders</a></li>
+                    </ul>
+                </nav>
+            </aside>
+            
+            <!-- Main Content -->
+            <main>
+                <!-- Header -->
+                <header class="navbar fixed top-0 left-0 w-full ml-[250px] py-2 px-4 flex justify-between items-center bg-secondary shadow-md z-50 transition-all duration-300 md:ml-250px">
+                    <div></div> <!-- Placeholder for future elements -->
+                    
+                    <span></span>
+                    <span></span>
+                
+                    <!-- Dropdown Container -->
+                    <div class="relative">
+                        <button id="dropdownToggle" class="bg-white text-gray-800 font-medium px-4 py-2 rounded-md shadow hover:bg-gray-200 transition">
+                            Admin ▼
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div id="dropdownMenu" class="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-md hidden transition-all duration-200">
+                            <a href="/admin/logout" class="block px-4 py-2 text-red-600 hover:bg-red-100">Logout</a>
+                        </div>
+                    </div>
+                
+                    <div></div>
+                </header>
+                
+                
+                
+                <!-- Add Font Awesome for Icons -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+                
+        
+        
+                <script>
+                    document.getElementById("dropdownToggle").addEventListener("click", function () {
+                        document.getElementById("dropdownMenu").classList.toggle("hidden");
+                    });
+                
+                    // Close dropdown when clicking outside
+                    document.addEventListener("click", function (event) {
+                        const dropdown = document.getElementById("dropdownMenu");
+                        const button = document.getElementById("dropdownToggle");
+                        if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                            dropdown.classList.add("hidden");
+                        }
+                    });
+                </script>

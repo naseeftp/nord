@@ -1,0 +1,286 @@
+<%- include("../../views/partials/admin/header") %>
+
+<style>
+   :root {
+    --background-color: #f8f8f8;
+    --text-primary: #1a1a1a;
+    --text-secondary: #333333;
+    --border-color: #d0d0d0;
+    --white: #ffffff;
+    --black: #000000;
+    --shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+body {
+    font-family: 'Georgia', serif;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+h1.mt-4 {
+    font-family: 'Baskerville', serif;
+    font-size: 2.5rem;
+    font-weight: normal;
+    color: var(--black);
+    border-bottom: 2px solid var(--black);
+    padding-bottom: 10px;
+}
+
+.breadcrumb {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    font-size: 0.9em;
+}
+
+.breadcrumb-item {
+    display: inline;
+    color: var(--text-secondary);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: " / ";
+    color: var(--border-color);
+    margin: 0 5px;
+}
+
+.breadcrumb-item a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--black);
+    text-decoration: underline;
+}
+
+.card {
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+}
+
+.card-header {
+    background-color: var(--black);
+    color: var(--white);
+    padding: 15px 20px;
+    font-family: 'Baskerville', serif;
+    font-weight: normal;
+    border-bottom: 1px solid var(--black);
+}
+
+.transaction-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.transaction-card {
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.3s ease;
+}
+
+.transaction-card:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.transaction-card p {
+    margin: 10px 0;
+    color: var(--text-secondary);
+}
+
+.transaction-card .amount {
+    font-weight: bold;
+}
+
+.transaction-card .amount.credit {
+    color: #2c7a2c;
+}
+
+.transaction-card .amount.debit {
+    color: #a32c2c;
+}
+
+.transaction-card .badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid var(--black);
+    color: var(--white);
+    background-color: var(--black);
+    text-transform: uppercase;
+    font-size: 0.8em;
+}
+
+.transaction-card .actions {
+    margin-top: 15px;
+    text-align: right;
+}
+
+.btn-sm {
+    text-decoration: none;
+    padding: 8px 15px;
+    border: 1px solid var(--black);
+    color: var(--black);
+    background-color: transparent;
+    transition: all 0.3s ease;
+    font-family: 'Georgia', serif;
+}
+
+.btn-sm:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.page-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.page-item.active .page-link {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.page-item.disabled .page-link {
+    color: var(--border-color);
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .transaction-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="container-fluid px-4">
+  <h1 class="mt-4">Transactions</h1>
+  <ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+    <li class="active"> > Transactions</li>
+  </ol>
+
+  
+
+  <div class="card mb-4">
+    <div class="card-header">
+      <i class="fas fa-table me-1"></i>
+      Transactions List
+    </div>
+    <div class="card-body">
+      <div class="transaction-grid">
+        <% if (transactions && transactions.length > 0) { %>
+          <% transactions.forEach(transaction => { %>
+            <div class="transaction-card">
+              
+              
+              <p><strong>id:</strong><%= transaction.transactionId %></p>
+              <p><strong>User:</strong> 
+                <% if (transaction.userId) { %>
+                  <%= transaction.userId.name %> (<%= transaction.userId.email %>)
+                <% } else { %>
+                  Unknown User
+                <% } %>
+              </p>
+              <p><strong>Amount:</strong> 
+                <span class="amount <%= transaction.transactionType === 'credit' ? 'credit' : 'debit' %>">
+                  <%= transaction.transactionType === 'credit' ? '+' : '-' %>₹<%= transaction.amount.toFixed(2) %>
+                </span>
+              </p>
+              <p><strong>Type:</strong> 
+                <span class="badge <%= transaction.transactionType === 'credit' ? 'bg-success' : 'bg-danger' %>">
+                  <%= transaction.transactionType %>
+                </span>
+              </p>
+            
+              <p><strong>Purpose:</strong> <%= transaction.
+                purpose %></p>
+              <p><strong>Date:</strong> <%= new Date(transaction.createdAt).toLocaleString() %></p>
+           
+              </p>
+              <div class="actions">
+                <a href="/admin/transactions/<%= transaction.transactionId %>" class="btn btn-sm btn-primary">
+                  <i class="fas fa-eye"></i> View
+                </a>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class="transaction-card text-center">
+            <p>No transactions found</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+              <a class="page-link" href="?page=<%= currentPage - 1 %>" tabindex="-1">Previous</a>
+            </li>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } %>
+            <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+              <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+            </li>
+          </ul>
+        </nav>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  function resetFilters() {
+    document.getElementById('filterForm').reset();
+    window.location.href = '/admin/transactions';
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fields = [
+      'transactionType', 'paymentMethod', 'purpose',
+      'orderId', 'startDate', 'endDate', 'userId'
+    ];
+    fields.forEach(field => {
+      const value = urlParams.get(field);
+      if (value) {
+        document.getElementById(field).value = value;
+      }
+    });
+  });
+</script>
+
+<%- include("../../views/partials/admin/footer") %>

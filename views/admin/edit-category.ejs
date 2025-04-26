@@ -1,0 +1,173 @@
+<%- include("../../views/partials/admin/header") %>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-60">
+            <form method="post" action="/admin/editCategory/<%=category._id%>" >
+              
+                <div class="mb-4 mt-30">
+                    <label for="category_name" class="form-label">Name</label>
+                    <input type="text" id="category_name" name="categoryName" value="<%=category.name%>" class="form-control border" />
+                    <div id="error-category-name" class="text-danger"></div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" id="description" class="form-control border"><%=category.description%></textarea>
+                    <div id="error-description" class="text-danger"></div>
+                </div>
+
+                <div class="d-grid text-end mt-30 col-md-5">
+                    <button class="btn btn-primary" type="submit">Update category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>  
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- 
+<script>
+    
+    async function validateForm(e) {
+        e.preventDefault();
+        
+       
+        document.getElementById("error-category-name").innerHTML = "";
+        document.getElementById("error-description").innerHTML = "";
+
+       
+        const categoryName = document.getElementById("category_name").value.trim();
+        const description = document.getElementById("description").value.trim();
+        let isValid = true;
+
+        if (!categoryName) {
+            document.getElementById("error-category-name").innerHTML = "Category name is required.";
+            isValid = false;
+        }
+
+        if (!description) {
+            document.getElementById("error-description").innerHTML = "Description is required.";
+            isValid = false;
+        }
+
+        if (!isValid) return;
+
+        try {
+            const response = await fetch('/admin/editCategory/<%=category._id%>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    categoryName: categoryName,
+                    description: description
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) { 
+                throw new Error(result.message || 'Failed to update category');
+            }
+
+            if (result.success) {
+                await Swal.fire({
+                    title: 'Success!',
+                    text: result.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                window.location.href = '/admin/category';
+            }
+            else {
+         
+            if (result.message.includes("already exists")) {
+                document.getElementById("error-category-name").innerHTML = result.message;
+            } else {
+                throw new Error(result.message || 'Failed to update category');
+            }
+        }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: error.message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    }
+    
+    document.forms[0].onsubmit = validateForm;
+</script> -->
+
+<script>
+    async function validateForm(e) {
+        e.preventDefault();
+        
+        // Clear previous errors
+        document.getElementById("error-category-name").innerHTML = "";
+        document.getElementById("error-description").innerHTML = "";
+
+        // Get values
+        const categoryName = document.getElementById("category_name").value.trim();
+        const description = document.getElementById("description").value.trim();
+        let isValid = true;
+
+        // Validation
+        if (!categoryName) {
+            document.getElementById("error-category-name").innerHTML = "Category name is required.";
+            isValid = false;
+        }
+
+        if (!description) {
+            document.getElementById("error-description").innerHTML = "Description is required.";
+            isValid = false;
+        }
+
+        if (!isValid) return;
+
+        try {
+            const response = await fetch('/admin/editCategory/<%=category._id%>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    categoryName: categoryName,
+                    description: description
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                await Swal.fire({
+                    title: 'Success!',
+                    text: result.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                window.location.href = '/admin/category';
+            } else {
+                if (result.message && result.message.includes("already exists")) {
+                    document.getElementById("error-category-name").innerHTML = result.message;
+                } else {
+                    throw new Error(result.message || 'Failed to update category');
+                }
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: error.message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    }
+    
+    document.forms[0].onsubmit = validateForm;
+</script>
+<%- include("../../views/partials/admin/footer") %>
+
+

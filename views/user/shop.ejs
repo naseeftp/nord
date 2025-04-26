@@ -1,0 +1,836 @@
+<%- include("../../views/partials/user/header") %>
+<style>
+  /* Existing CSS styles */
+  .main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .shop-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f1f1f1;
+    border-radius: 25px;
+    overflow: hidden;
+    max-width: 250px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+
+  .search-button {
+    width: 100%;
+    padding: 8px;
+    background-color: #1e918b;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 15px;
+    transition: background-color 0.3s, transform 0.2s;
+    text-align: center;
+  }
+
+  .search-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+
+  .clear-search-button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px;
+    background-color: #ff3f6c;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .clear-search-button:hover {
+    background-color: #e60023;
+  }
+
+  .sidebar {
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    width: 250px;
+    text-align: center;
+  }
+  .filter-section {
+    margin-bottom: 20px;
+  }
+  .filter-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+  }
+  .filter-item {
+    margin: 5px 0;
+  }
+  .filter-item a {
+    text-decoration: none;
+    color: #333;
+  }
+  .filter-item a:hover {
+    color: #007bff;
+  }
+  .product-list-container {
+    display: flex;
+    gap: 20px;
+  }
+  .product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: calc(100% - 270px);
+  }
+  .product-card {
+    width: calc(33.333% - 20px);
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+  }
+  .product-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+  .wishlist-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(237, 247, 247, 0.8);
+    color: #fff;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .add-to-cart-btn {
+    background-color: #46698f;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .pagination a {
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    color: #333;
+    text-decoration: none;
+  }
+  .pagination .active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  .price-filter {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  .price-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .price-button {
+    padding: 12px 20px;
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    text-align: center;
+    font-size: 14px;
+  }
+  .price-button:hover {
+    background-color: #007bff;
+    color: white;
+    transform: scale(1.05);
+  }
+  .price-button:active {
+    transform: scale(0.95);
+  }
+  .category-brand-container {
+    text-align: center;
+  }
+
+  /* Modal Background */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  /* Modal Content */
+  .modal-content {
+    background-color: #f8f9fa;
+    margin: 10% auto;
+    padding: 30px;
+    width: 400px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  /* Close Button */
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 25px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .close:hover {
+    color: #e74c3c;
+  }
+
+  /* Title Styling */
+  .modal-content h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  /* Button Styling */
+  #confirmAddToCart {
+    width: 100%;
+    padding: 12px;
+    background-color: #46698f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  #confirmAddToCart:hover {
+    background-color: #3b5b74;
+  }
+
+  /* Size Options Container */
+  #sizeOptions {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .size-option {
+    padding: 12px 20px;
+    background-color: #f1f1f1;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .size-option:hover {
+    background-color: #46698f;
+    color: white;
+  }
+
+  /* Animation for modal fade-in */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Enhanced Product Card Styling */
+  .product-card {
+    width: calc(33.333% - 20px);
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px;
+    background-color: white;
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-image-container {
+    position: relative;
+    padding-top: 10px;
+    overflow: hidden;
+  }
+
+  .product-card img {
+    max-width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.5s ease;
+  }
+
+  .product-card:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Enhanced Wishlist Button */
+  .wishlist-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: white;
+    color: #ff3f6c;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    font-size: 18px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .wishlist-btn:hover {
+    transform: scale(1.1);
+    background-color: #ff3f6c;
+    color: white;
+  }
+
+  /* Improved Offer Badge */
+  .offer-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #ff3f6c;
+    color: white;
+    padding: 5px 15px;
+    font-weight: bold;
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
+    z-index: 5;
+    font-size: 14px;
+  }
+
+  /* Corner Offer */
+  .corner-offer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    z-index: 5;
+  }
+
+  .corner-offer::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 100px;
+    height: 100px;
+    background-color: #ff3f6c;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .corner-offer-text {
+    position: absolute;
+    top: 15px;
+    left: 2px;
+    transform: rotate(-45deg);
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    width: 100px;
+  }
+
+  /* Product Details */
+  .product-details {
+    padding: 15px;
+  }
+
+  .product-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 10px 0 5px;
+    color: #333;
+  }
+
+  .product-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+  }
+
+  .price-strike {
+    font-size: 14px;
+    color: #888;
+    text-decoration: line-through;
+    margin-left: 5px;
+  }
+
+  /* Add to Cart Button */
+  .add-to-cart-btn {
+    background-color: #29292b;
+    color: white;
+    padding: 12px 0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    margin-top: 5px;
+    font-size: 15px;
+  }
+
+  .add-to-cart-btn:hover {
+    background-color: #000;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .product-list-container {
+      flex-direction: column;
+      align-items: center;
+    }
+    .sidebar {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 30px;
+    }
+    .product-grid {
+      width: 100%;
+      justify-content: center;
+    }
+    .product-card {
+      width: calc(50% - 20px);
+    }
+    .modal-content {
+      width: 90%;
+      max-width: 350px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-container {
+      padding: 10px;
+    }
+    .shop-topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .search-form {
+      max-width: 100%;
+      width: 100%;
+    }
+    .product-card {
+      width: 100%;
+      max-width: 300px;
+    }
+    .product-card img {
+      height: 200px;
+    }
+    .pagination {
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .pagination a {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+    .price-options {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .price-button {
+      padding: 10px 15px;
+      font-size: 12px;
+    }
+    #sizeOptions {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .size-option {
+      padding: 10px 15px;
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-card img {
+      height: 180px;
+    }
+    .product-title {
+      font-size: 14px;
+    }
+    .product-price {
+      font-size: 14px;
+    }
+    .price-strike {
+      font-size: 12px;
+    }
+    .add-to-cart-btn {
+      padding: 10px 0;
+      font-size: 14px;
+    }
+    .wishlist-btn {
+      width: 30px;
+      height: 30px;
+      font-size: 16px;
+    }
+    .corner-offer {
+      width: 80px;
+      height: 80px;
+    }
+    .corner-offer::before {
+      width: 80px;
+      height: 80px;
+      top: -40px;
+      left: -40px;
+    }
+    .corner-offer-text {
+      top: 10px;
+      font-size: 11px;
+      width: 80px;
+    }
+    .modal-content {
+      padding: 20px;
+    }
+    .modal-content h3 {
+      font-size: 18px;
+    }
+    #confirmAddToCart {
+      padding: 10px;
+      font-size: 14px;
+    }
+    .search-input,
+    .search-button,
+    .clear-search-button {
+      font-size: 12px;
+      padding: 6px;
+    }
+  }
+</style>
+
+<div class="main-container">
+  <section class="shop-page container">
+    <div class="shop-topbar">
+      <div class="search-bar">
+        <form action="/search" method="POST" class="search-form">
+          <input type="text" name="query" placeholder="Search items..." class="search-input" />
+          <button type="submit" class="search-button">Search</button>
+          <% if (searchQuery) { %>
+            <a href="/shop" class="clear-search-button">Clear Search</a>
+          <% } %>
+        </form>
+      </div>
+    </div>
+
+    <div class="product-list-container">
+      <aside class="sidebar">
+        <div class="filter-section">
+          <div class="filter-title">Categories</div>
+          <div class="category-brand-container">
+            <ul>
+              <% for (let i = 0; i < category.length; i++) { %>
+                <li class="filter-item">
+                  <a href="/filter?category=<%= category[i]._id %>"><%= category[i].name %></a>
+                </li>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+
+        <div class="price-filter">
+          <div class="filter-title">Filter by Price</div>
+          <form id="price-filter-form">
+            <div class="price-options">
+              <a href="/filterPrice?gt=0<=500"><button type="button" class="price-button">Under ₹500</button></a>
+              <a href="/filterPrice?gt=500<=1000"><button type="button" class="price-button">₹500 - ₹1000</button></a>
+              <a href="/filterPrice?gt=1000<=1500"><button type="button" class="price-button">₹1000 - ₹1500</button></a>
+              <a href="/filterPrice?gt=1500<=100000"><button type="button" class="price-button">Above ₹1500</button></a>
+            </div>
+          </form>
+        </div>
+      </aside>
+      <main class="product-grid">
+        <% for (let i = 0; i < products.length; i++) { %>
+          <div class="product-card">
+            <div class="product-image-container">
+              <div class="wishlist-btn" onclick="addToWishList('<%=products[i]._id%>')">
+                ❤️
+              </div>
+              <% if(products[i].salePrice !== products[i].regularPrice) { %>
+                <div class="corner-offer">
+                  <span class="corner-offer-text">
+                    <%= Math.round((1-products[i].salePrice/products[i].regularPrice)*100) %>% OFF
+                  </span>
+                </div>
+              <% } %>
+              
+              <a href="/productDetails?id=<%= products[i]._id %>">
+                <img src="/Uploads/re-image/<%= products[i].productImage[0] %>" alt="<%= products[i].productName %>" />
+              </a>
+            </div>
+            
+            <div class="product-details">
+              <a href="/productDetails?id=<%= products[i]._id %>">
+                <h4 class="product-title"><%= products[i].productName %></h4>
+                <p class="product-price">
+                  ₹<%= products[i].salePrice.toLocaleString('en-IN') %>
+                  <% if(products[i].salePrice !== products[i].regularPrice) { %>
+                    <span class="price-strike">
+                      ₹<%= products[i].regularPrice.toLocaleString('en-IN') %>
+                    </span>
+                  <% } %>
+                </p>
+              </a>
+              
+              <button class="add-to-cart-btn" onclick="showSizeModal('<%= products[i]._id %>')">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        <% } %>
+      </main>
+   
+  </div>
+   <div id="sizeModal" class="modal">
+      <div class="modal-content">
+        <span class="close">×</span>
+        <h3>Select Size</h3>
+        <div id="sizeOptions">
+          <div class="size-option">S</div>
+          <div class="size-option">M</div>
+          <div class="size-option">L</div>
+          <div class="size-option">XL</div>
+        </div>
+        <button id="confirmAddToCart" style="background-color: #29292b;">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+</section>
+</div>
+<div class="pagination">
+  <% if (currentPage > 1) { %>
+    <a class="btn" href="/shop?page=<%= currentPage - 1 %>">Prev</a>
+  <% } %>
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <a class="btn <%= currentPage === i ? 'active' : '' %>" href="/shop?page=<%= i %>"><%= i %></a>
+  <% } %>
+  <% if (currentPage < totalPages) { %>
+    <a class="btn" href="/shop?page=<%= currentPage + 1 %>">Next</a>
+  <% } %>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<%- include("../../views/partials/user/footer") %>
+
+<script>
+  let selectedProductId = null;
+  let selectedSize = null;
+
+  const modal = document.getElementById('sizeModal');
+  const span = document.getElementsByClassName("close")[0];
+
+  span.onclick = function() {
+    modal.style.display = "none";
+  };
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  function showSizeModal(productId) {
+    selectedProductId = productId;
+
+    $.ajax({
+      url: `/product-sizes/${productId}`,
+      method: "GET",
+      success: function(sizes) {
+        const sizeOptions = document.getElementById('sizeOptions');
+        sizeOptions.innerHTML = '';
+
+        sizes.forEach(size => {
+          const button = document.createElement('button');
+          button.className = 'size-option-btn';
+          button.style = 'margin: 5px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;';
+          button.textContent = `${size.size} (${size.quantity})`;
+          button.disabled = size.quantity <= 0;
+
+          button.onclick = function() {
+            document.querySelectorAll('.size-option-btn').forEach(btn => {
+              btn.style.backgroundColor = '';
+              btn.style.borderColor = '';
+            });
+
+            button.style.backgroundColor = '#46698f';
+            button.style.borderColor = '#46698f';
+            selectedSize = size.size;
+          };
+
+          sizeOptions.appendChild(button);
+        });
+
+        modal.style.display = "block";
+      },
+      error: function() {
+        Swal.fire({
+          title: "Error",
+          text: "Failed to fetch sizes. Please try again.",
+          icon: "error",
+          confirmButtonColor: "#FF3F6c"
+        });
+      }
+    });
+  }
+
+  document.getElementById('confirmAddToCart').onclick = function() {
+    if (!selectedSize) {
+      Swal.fire({
+        title: "Size Required!",
+        text: "Please select a size before proceeding.",
+        icon: "warning",
+        confirmButtonColor: "#ef4444",
+        confirmButtonText: "OK"
+      });
+      return;
+    }
+
+    $.ajax({
+      url: "/addToCart",
+      method: "POST",
+      data: {
+        productId: selectedProductId,
+        selectedSize: selectedSize
+      },
+      success: function(response) {
+        console.log('response: ', response);
+        
+        if (response.status === true) {
+          Swal.fire({
+            title: "Success!",
+            text: "Item added to cart successfully.",
+            icon: "success",
+            confirmButtonColor: "#FF3F6c"
+          })
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: response.status || "Failed to add item to cart",
+            icon: "error",
+            confirmButtonColor: "#FF3F6c"
+          });
+        }
+      },
+      error: function() {
+        Swal.fire({
+          title: "Error",
+          text: "Something went wrong. Please try again.",
+          icon: "error",
+          confirmButtonColor: "#FF3F6c"
+        });
+      }
+    });
+
+    modal.style.display = "none";
+    selectedSize = null;
+    selectedProductId = null;
+  };
+</script>
+
+<script>
+  function addToWishList(productId) {
+    $.ajax({
+      url: '/addTowishlist',
+      method: 'POST',
+      data: { productId: productId },
+      success: (response) => { 
+        if (response.status) {
+          Swal.fire({
+            title: 'Added To Wishlist',
+            text: 'Product has been added to your wishlist',
+            icon: 'success',
+            timer: 2000,
+          });
+        } else {
+          Swal.fire({
+            title: 'Already in Wishlist',
+            text: response.message,
+            icon: 'warning', 
+            timer: 2000,
+          });
+        }
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'There was an error adding the product to your wishlist',
+          icon: 'error',
+          timer: 2000,
+        });
+      },
+    });
+  }
+</script>

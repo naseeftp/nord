@@ -1,0 +1,303 @@
+<%- include("../../views/partials/admin/header") %>
+
+<style>
+:root {
+    --background-color: #f8f8f8;
+    --text-primary: #1a1a1a;
+    --text-secondary: #333333;
+    --border-color: #d0d0d0;
+    --white: #ffffff;
+    --black: #000000;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Georgia', serif;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.transaction-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--black);
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+.transaction-header h1 {
+    font-family: 'Baskerville', serif;
+    font-weight: normal;
+    color: var(--black);
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.breadcrumb {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    font-size: 0.9em;
+}
+
+.breadcrumb-item {
+    display: inline;
+    color: var(--text-secondary);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: " / ";
+    color: var(--border-color);
+    margin: 0 5px;
+}
+
+.breadcrumb-item a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--black);
+    text-decoration: underline;
+}
+
+.card {
+    border: 1px solid var(--border-color);
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    background-color: var(--black);
+    color: var(--white);
+    padding: 15px 20px;
+    font-family: 'Baskerville', serif;
+    font-weight: normal;
+    border-bottom: 1px solid var(--black);
+}
+
+.card-body {
+    background-color: var(--white);
+    padding: 25px;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-label {
+    flex: 0 0 40%;
+    font-weight: bold;
+    color: var(--text-secondary);
+    font-family: 'Baskerville', serif;
+}
+
+.detail-value {
+    flex: 0 0 60%;
+    color: var(--text-primary);
+}
+
+.transaction-amount {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.transaction-amount.text-success {
+    color: #2c7a2c !important;
+}
+
+.transaction-amount.text-danger {
+    color: #a32c2c !important;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 1px solid var(--black);
+    color: var(--white);
+    background-color: var(--black);
+}
+
+.action-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 8px 15px;
+    border: 1px solid var(--black);
+    color: var(--black);
+    background-color: transparent;
+    transition: all 0.3s ease;
+    font-family: 'Georgia', serif;
+}
+
+.btn:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.btn-primary {
+    border-color: #1a1a1a;
+    color: #1a1a1a;
+}
+
+.btn-info {
+    border-color: #555;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    .transaction-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .detail-row {
+        flex-direction: column;
+    }
+
+    .detail-label, .detail-value {
+        flex: 1 0 100%;
+        margin-bottom: 5px;
+    }
+}
+</style>
+
+<div class="transaction-container">
+    <div class="transaction-header">
+        <div>
+            <h1>Transaction Details</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/admin/">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/admin/transactions">Transactions</a></li>
+                    <li class="breadcrumb-item active">Transaction Details</li>
+                </ol>
+            </nav>
+        </div>
+        <a href="/admin/transactions" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Transactions
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-info-circle me-2"></i>Transaction Information
+        </div>
+        <div class="card-body">
+            <div class="detail-row">
+                <div class="detail-label">Transaction ID</div>
+                <div class="detail-value"><%= transaction.transactionId %></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Date & Time</div>
+                <div class="detail-value">
+                    <%= new Date(transaction.createdAt).toLocaleString() %>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Transaction Type</div>
+                <div class="detail-value">
+                <%= transaction.transactionType %>
+                </div>
+            </div>
+           
+            <div class="detail-row">
+                <div class="detail-label">Amount</div>
+                <div class="detail-value">
+                    <span class="transaction-amount <%= transaction.transactionType === 'credit' ? 'text-success' : 'text-danger' %>">
+                        <%= transaction.transactionType === 'credit' ? '+' : '-' %>₹<%= transaction.amount %>
+                    </span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Purpose</div>
+                <div class="detail-value"><%= transaction.purpose %></div>
+            </div>
+            
+            <% if (transaction.purpose === 'cancellation_order_refund' || transaction.purpose === 'return_order_refund') { %>
+            <div class="detail-row">
+                <div class="detail-label">Related Order</div>
+                <div class="detail-value">
+                    <% if (transaction.orders && transaction.orders.length > 0) { %>
+                        <div class="action-buttons">
+                            <a href="/admin/orders/<%= transaction.orders[0].orderId %>" class="btn btn-sm btn-primary">
+                                <i class="fas fa-shopping-bag me-1"></i> View Order Details
+                            </a>
+                            <% if (transaction.purpose === 'return') { %>
+                                <a href="/admin/returns?orderId=<%= transaction.orders[0].orderId %>" class="btn btn-sm btn-info">
+                                    <i class="fas fa-exchange-alt me-1"></i> View Return Details
+                                </a>
+                            <% } %>
+                        </div>
+                    <% } else { %>
+                        <span class="text-muted">No order information available</span>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+            
+            <div class="detail-row">
+                <div class="detail-label">Status</div>
+                <div class="detail-value">
+                    <span class="status-badge <%= 
+                        transaction.status === 'completed' ? 'bg-success' : 
+                        transaction.status === 'pending' ? 'bg-warning' : 'bg-danger' 
+                    %>">
+                        <%= transaction.status %>
+                    </span>
+                </div>
+            </div>
+            
+            <% if (transaction.description) { %>
+            <div class="detail-row">
+                <div class="detail-label">Description</div>
+                <div class="detail-value"><%= transaction.description %></div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+
+    <% if (transaction.userId) { %>
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-user me-2"></i>User Information
+        </div>
+        <div class="card-body">
+            <div class="detail-row">
+                <div class="detail-label">Name</div>
+                <div class="detail-value"><%= transaction.userId.name %></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Email</div>
+                <div class="detail-value"><%= transaction.userId.email %></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Phone</div>
+                <div class="detail-value"><%= transaction.userId.phone || 'N/A' %></div>
+            </div>
+            
+    </div>
+    <% } %>
+</div>
+
+<%- include("../../views/partials/admin/footer") %>

@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Error Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8d7da;
+            color: #721c24;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .error-container {
+            background: #fff3cd;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 50px;
+            margin: 0;
+        }
+        p {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            color: white;
+            background: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Oops!</h1>
+        <p>Something went wrong. You don't have access to this page.</p>
+        <button class="btn" onclick="goToDashboard()">Go to Dashboard</button>
+        
+    </div>
+
+    <script>
+        function goToDashboard() {
+            window.location.href = "/admin/dashboard"; 
+        }
+    </script>
+</body>
+</html>
