@@ -22,8 +22,138 @@ catch (error)
 }
 }
 
+
 const addProducts = async (req, res) => {
+    try {
+        const products = req.body;
+        if (!products.productName) {
+            return res.status(400).json({ 
+                swalError: true,
+                message: "Product Name is required"
+            });
+        }
+        const productExists = await Product.findOne({
+            productName: { $regex: new RegExp(`${products.productName}$`, 'i') }
+        });
+
+        if (productExists) {
+            return res.status(400).json({
+                swalError: true,
+                message: "Product already exists. Please try again with another name."
+            });
+        }
+
+      
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({
+                swalError: true,
+                message: "Please upload at least one image."
+            });
+        }
+
+    
+        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+        for (const file of req.files) {
+            if (!allowedMimeTypes.includes(file.mimetype)) {
+                return res.status(400).json({
+                    swalError: true,
+                    message: `Invalid file type for ${file.originalname}. Only JPEG, JPG, PNG, or WEBP images are allowed.`
+                });
+            }
+        }
+
+       
+        const images = [];
+        for (const file of req.files) {
+            const originalImagePath = file.path;
+            const resizedImagePath = path.join(
+                "public",
+                "uploads",
+                "product-images",
+                file.filename
+            );
+
+            await sharp(originalImagePath)
+                .resize({ width: 400, height: 440 })
+                .toFile(resizedImagePath);
+
+            images.push(file.filename);
+        }
+
+     
+        const categoryId = await Category.findOne({ name: products.category });
+        if (!categoryId) {
+            return res.status(400).json({
+                swalError: true,
+                message: "Invalid category selected."
+            });
+        }
+
+       const regularPrice=parseFloat(products.regularPrice);
+       let salePrice=regularPrice;
+
+        const categoryOffer=categoryId.categoryoffer||0;
+        const productOffer=0;
+
+        const higherOffer=Math.max(categoryOffer,productOffer);
+
+      
+        if(higherOffer>0){
+        salePrice=regularPrice-Math.floor(regularPrice*(higherOffer/100));
+       }
+      
+       if(categoryId.categoryoffer&&categoryId.categoryoffer>0){
+        salePrice=regularPrice*(1-(categoryId.categoryoffer/100));
+      }
+
+      if(products.salePrice&&parseFloat(products.salePrice)<salePrice){
+        salePrice=parseFloat(products.salePrice)
+      }
+
+        const sizes = [];
+        if (products.sizeQuantity && typeof products.sizeQuantity === "object") {
+            for (const [size, quantity] of Object.entries(products.sizeQuantity)) {
+                const qty = parseInt(quantity, 10) || 0;
+                if (qty > 0) {
+                    sizes.push({ size, quantity: qty });
+                }
+            }
+        }
+
+   
+        const newProduct = new Product({
+            productName: products.productName,
+            description: products.description,
+            brand: products.brand,
+            category: categoryId._id,
+            regularPrice: regularPrice,
+            salePrice: salePrice,
+            createdOn: new Date(),
+            sizes: sizes,
+            color: products.color,
+            productImage: images,
+            status: 'Available',
+            categoryoffer: categoryOffer,
+            productOffer: productOffer,
+            finalPrice:salePrice
+        });
+
+        await newProduct.save();
+
+        return res.json({
+            success: true,
+            message: "Product added successfully!"
+        });
+
+    } catch (error) {
+        console.error("Error saving product:", error);
+        return res.status(500).json({
+            swalError: true,
+            message: "An error occurred while saving the product. Please try again."
+        });
+    }
 };
+
 
 
 const getAllProducts=async(req,res)=>{
