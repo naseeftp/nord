@@ -12,6 +12,9 @@ const getCartPage = async (req, res) => {
     const userId = req.session.user
     const page=parseInt(req.query.page)||1;
     const limit=4;
+    const user = await User.findById(userId);
+    const wishlistCount = user?.wishlist?.length || 0;
+
     let cart = await Cart.findOne({ userId }).populate("items.productId")
 
     if(!cart){
@@ -54,6 +57,8 @@ const getCartPage = async (req, res) => {
       grandTotal: null,
       totalPages,
       currentPage,
+      wishlistCount,
+      cartCount: cart.items.length
 
     });
   } catch (error) {
@@ -132,6 +137,7 @@ const addToCart = async (req, res) => {
 
     
     const user = await User.findById(userId);
+    
     if (!user) {
       return res.json({ status: "User not found" });
     }
@@ -148,6 +154,7 @@ const addToCart = async (req, res) => {
     return res.json({
       status: true,
       cartLength: userCart.items.length,
+      wishlistCount: user?.wishlist?.length || 0,
       user: userId,
     });
 

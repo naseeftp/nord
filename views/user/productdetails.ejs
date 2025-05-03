@@ -464,91 +464,170 @@ document.addEventListener("DOMContentLoaded", function () {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-function addToCart(productId) {
-    const selectedSize = document.querySelector(`input[name="size-${productId}"]:checked`);
-
-    if (!selectedSize) {
+    // Function to update navigation counts
+    function updateNavCounts() {
+      $.ajax({
+        url: '/getNavCounts',
+        method: 'GET',
+        success: function(response) {
+          if (response.status) {
+            $('#wishlistCount').text(response.wishlistCount);
+            $('#cartCount').text(response.cartCount);
+          }
+        },
+        error: function() {
+          console.log('Error fetching nav counts');
+        }
+      });
+    }
+    
+    // Initialize counts on page load
+    $(document).ready(function() {
+      updateNavCounts();
+    });
+    
+    // Add to Cart function
+    function addToCart(productId) {
+      const selectedSize = document.querySelector(`input[name="size-${productId}"]:checked`);
+    
+      if (!selectedSize) {
         Swal.fire({
-            icon: 'warning',
-            title: 'Please select a size',
-            text: 'You need to select a size before adding to cart.'
+          icon: 'warning',
+          title: 'Please select a size',
+          text: 'You need to select a size before adding to cart.',
+          confirmButtonColor: '#ef4444'
         });
         return;
-    }
-
-    $.ajax({
-        url: "/addToCart",
-        method: "POST",
-        data: { 
-            productId: productId,
-            selectedSize: selectedSize.value  // Pass the selected size
+      }
+    
+      $.ajax({
+        url: '/addToCart',
+        method: 'POST',
+        data: {
+          productId: productId,
+          selectedSize: selectedSize.value
         },
-        success: (response) => {
-            if (response.status === true) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Added to Cart!',
-                    text: 'The product has been added to your cart.',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Failed',
-                    text: response.status
-                });
+        success: function(response) {
+          if (response.status === true) {
+            // Update cart count
+            $('#cartCount').text(response.cartLength || response.cartCount);
+            if (response.wishlistCount !== undefined) {
+              $('#wishlistCount').text(response.wishlistCount);
             }
-        },
-        error: () => {
+    
             Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Error adding product to cart.'
+              icon: 'success',
+              title: 'Added to Cart!',
+              text: 'The product has been added to your cart.',
+              timer: 2000,
+              showConfirmButton: false,
+              confirmButtonColor: '#FF3F6c'
             });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Failed',
+              text: response.status || 'Failed to add item to cart',
+              confirmButtonColor: '#FF3F6c'
+            });
+          }
         },
-    });
-}
-</script>
-
-
-<script>
- function addToWishList(productId) {
-    $.ajax({
-      url: '/addTowishlist',
-      method: 'POST',
-      data: { productId: productId },
-      success: (response) => { 
-        if (response.status) {
+        error: function() {
           Swal.fire({
-            title: 'Added To Wishlist',
-            text: 'Product has been added to your wishlist',
-            icon: 'success',
-            timer: 2000,
-          });
-        } else {
-          Swal.fire({
-            title: 'Already in Wishlist',
-            text: response.message,
-            icon: 'warning', 
-            timer: 2000,
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error adding product to cart.',
+            confirmButtonColor: '#FF3F6c'
           });
         }
-      },
-      error: (error) => {
-        Swal.fire({
-          title: 'Error',
-          text: 'There was an error adding the product to your wishlist',
-          icon: 'error',
-          timer: 2000,
+      });
+    }
+    
+    // Add to Wishlist function
+    function addToWishList(productId) {
+      $.ajax({
+        url: '/addTowishlist',
+        method: 'POST',
+        data: { productId: productId },
+        success: function(response) {
+          if (response.status) {
+            // Update wishlist count
+            $('#wishlistCount').text(response.wishlistCount);
+            if (response.cartCount !== undefined) {
+              $('#cartCount').text(response.cartCount);
+            }
+    
+            Swal.fire({
+              title: 'Added To Wishlist',
+              text: 'Product has been added to your wishlist',
+              icon: 'success',
+              timer: 2000,
+              confirmButtonColor: '#FF3F6c'
+            });
+          } else {
+            Swal.fire({
+              title: 'Already in Wishlist',
+              text: response.message,
+              icon: 'warning',
+              timer: 2000,
+              confirmButtonColor: '#FF3F6c'
+            });
+          }
+        },
+        error: function() {
+          Swal.fire({
+            title: 'Error',
+            text: 'There was an error adding the product to your wishlist',
+            icon: 'error',
+            timer: 2000,
+            confirmButtonColor: '#FF3F6c'
+          });
+        }
+      });
+    }
+    
+    // Existing image gallery and magnifier script (unchanged)
+    document.addEventListener("DOMContentLoaded", function () {
+      const productImage = document.getElementById("main-product-image");
+      const magnifier = document.getElementById("magnifier");
+      const productImageContainer = document.getElementById("product-image-container");
+    
+      productImageContainer.addEventListener("mousemove", function (e) {
+        const { left, top, width, height } = productImageContainer.getBoundingClientRect();
+        const mouseX = e.clientX - left;
+        const mouseY = e.clientY - top;
+    
+        magnifier.style.display = "block";
+        magnifier.style.left = `${mouseX - 75}px`;
+        magnifier.style.top = `${mouseY - 75}px`;
+    
+        const backgroundPosX = (mouseX / width) * 100;
+        const backgroundPosY = (mouseY / height) * 100;
+        magnifier.style.backgroundPosition = `${backgroundPosX}% ${backgroundPosY}%`;
+      });
+    
+      productImageContainer.addEventListener("mouseleave", function () {
+        magnifier.style.display = "none";
+      });
+    
+      function updateMagnifierImage(imageSrc) {
+        magnifier.style.backgroundImage = `url('${imageSrc}')`;
+      }
+    
+      updateMagnifierImage(productImage.src);
+    
+      document.querySelectorAll(".thumbnail").forEach(thumbnail => {
+        thumbnail.addEventListener("click", function () {
+          const newImageSrc = this.getAttribute("data-src");
+          productImage.src = newImageSrc;
+          updateMagnifierImage(newImageSrc);
+    
+          document.querySelectorAll(".thumbnail").forEach(thumb => thumb.classList.remove("active"));
+          this.classList.add("active");
         });
-      },
+      });
     });
-  }
-
-
-</script>
-
+    </script>
 
 
 <%- include("../../views/partials/user/footer") %>

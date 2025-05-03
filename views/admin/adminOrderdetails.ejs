@@ -345,17 +345,31 @@ button:active {
           <div class="order-details">
               <div class="order-meta">
                   <div class="meta-item">
-                      <span class="label">Order ID:</span>
-                      <span class="value"><%= order.orderId %></span>
+                      <span class="label">Order ID:</span> <span class="value"><%= order.orderId %></span>
+                     
                   </div>
                   <div class="meta-item">
-                      <span class="label">Total Amount:</span>
-                      <span class="value">₹<%= order.finalAmount %></span>
-                  </div>
+                    <span class="label">Payment Method:</span>
+                    <span class="value"><%= order.paymentMethod %></span>
+                </div>
+                <div class="meta-item">
+                  <span class="label">totalPrice:</span>
+                  <span class="value">₹<%= order.totalPrice%></span>
+              </div>
                   <div class="meta-item">
-                      <span class="label">Payment Method:</span>
-                      <span class="value"><%= order.paymentMethod %></span>
-                  </div>
+                    <span class="label">deliveryCharge:</span>
+                    <span class="value">₹<%= order.deliveryCharge%></span>
+                </div>
+                <div class="meta-item">
+                  <span class="label">discount:</span>
+                  <span class="value">-₹<%= order.discount%></span>
+              </div>
+                  
+
+                  <div class="meta-item">
+                    <span class="label">finalAmount:</span>
+                    <span class="value">₹<%= order.finalAmount %></span>
+                </div>
                   <div class="meta-item">
                       <span class="label">Order Date:</span>
                       <span class="value"><%= new Date(order.createdOn).toLocaleDateString() %></span>
@@ -392,8 +406,10 @@ button:active {
                       <div class="item-details">
                           <h3><%= item.product.productName %></h3>
                           <p class="label">Product ID: <%= item.product._id %></p>
-                          <p class="label">Quantity: <%= item.quantity %></p>
+                          
                           <p class="label">Size: <%= item.selectedSize %></p>
+                          <p class="label">item price: <%= item.price %></p>
+                          <p class="label">Quantity: <%= item.quantity %></p>
                           <p class="label">Price: ₹<%= item.price * item.quantity %></p>
                           <p class="label">Status: <%= item.status %></p>
                           <% if (item.status === 'Return Requested') { %>

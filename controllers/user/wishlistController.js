@@ -1,16 +1,20 @@
-const User = require("../../models/userSchema");
+const User = require("../../models/userSchema")
 const Product = require("../../models/productSchema");
+const Cart=require("../../models/cartSchema")
 
 const loadWishlist = async (req, res) => {
   try {
     const userId = req.session.user;
     const user = await User.findById(userId);
+    const cart = await Cart.findOne({ userId });
+    const cartCount = cart?.items?.length || 0;
      if (!user || !user.wishlist || !Array.isArray(user.wishlist)) {
       return res.render("wishlist", {
         user: null,
         wishlist: [],
         totalPages: 0,
         currentPage: 1,
+        cartCount
       });
     }
 
@@ -31,6 +35,8 @@ const loadWishlist = async (req, res) => {
       wishlist: products,
       totalPages: totalPages,
       currentPage: page,
+      wishlistCount:user.wishlist.length,
+      cartCount
     });
   } catch (error) {
     console.error(error);
@@ -54,7 +60,14 @@ const addToWishlist = async (req, res) => {
 
     user.wishlist.push(productId);
     await user.save();
-    return res.status(200).json({ status: true, message: "Product added to wishlist" });
+    const cart = await Cart.findOne({ userId });
+    return res.status(200).json({ 
+      status: true,
+       message: "Product added to wishlist",
+       wishlistCount: user.wishlist.length,
+       cartCount: cart?.items?.length || 0
+      
+      });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ status: false, message: "Server error" });
@@ -66,6 +79,8 @@ const removeProduct = async (req, res) => {
     const productId = req.query.productId;
     const userId = req.session.user;
     const user = await User.findById(userId);
+    const cart= await Cart.findOne({userId})
+    
 
     if (!user) {
       return res.status(404).json({ status: false, message: "User not found" });
@@ -78,6 +93,8 @@ const removeProduct = async (req, res) => {
 
     user.wishlist.splice(index, 1);
     await user.save();
+   
+
     return res.redirect('/wishlist');
   } catch (error) {
     console.error(error);

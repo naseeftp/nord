@@ -4,6 +4,7 @@ const Transaction = require("../../models/transactionSchema")
 const Razorpay=require('razorpay')
 const crypto = require("crypto")
 const env = require("dotenv").config()
+const Cart = require("../../models/cartSchema")
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_API_KEY,
@@ -11,11 +12,25 @@ const razorpay = new Razorpay({
 })
 
 
+async function getUserCounts(userId) {
+  if (!userId) return { wishlistCount: 0, cartCount: 0 };
+  
+  const [user, cart] = await Promise.all([
+    User.findById(userId),
+    Cart.findOne({ userId })
+  ]);
+  
+  return {
+    wishlistCount: user?.wishlist?.length || 0,
+    cartCount: cart?.items?.length || 0
+  };
+}
   const loadWallet=async(req,res)=>{
   try {
     const userId=req.session.user;
     const userData=await User.findById(userId)
     const wallet =await Wallet.findOne({userId:userId})
+    const { wishlistCount, cartCount } = await getUserCounts(userId);
 
     let transactions=[]
     let totalTransactions=0;
@@ -27,6 +42,9 @@ const razorpay = new Razorpay({
         user:userData,
         wallet: wallet||{balance:0},
         transactions:transactions,
+        wishlistCount,
+        cartCount
+  
     })
 
   } catch (error) {
@@ -40,6 +58,7 @@ const getWallethistory=async(req,res)=>{
     const userId=req.session.user;
     const userData=await User.findById(userId)
     const wallet =await Wallet.findOne({userId:userId})
+    const { wishlistCount, cartCount } = await getUserCounts(userId);
      const limit=6;
     const currentPage=parseInt(req.query.page)||1;
     let startIndex=(currentPage-1)*limit;
@@ -63,7 +82,10 @@ const getWallethistory=async(req,res)=>{
         transactions:transactions,
         currentPage,
         totalPages,
-        totalTransactions
+        totalTransactions,
+        wishlistCount,
+        cartCount
+  
     })
 
   } catch (error) {

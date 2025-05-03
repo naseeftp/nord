@@ -1,110 +1,157 @@
 <%- include("../../views/partials/user/header") %>
 <style>
-
-.btn-sm {
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 5px;
-    transition: all 0.3s ease-in-out;
-}
-
-.btn-sm:hover {
-    transform: scale(1.05);
-}
-
-
-.btn-sm.add-to-cart {
-    background-color: #28a745; 
-    color: white;
-    border: none;
-}
-
-.btn-sm.add-to-cart:hover {
-    background-color: #218838;
-}
-
-
-.btn-sm.remove-item {
-    background-color: #dc3545; 
-    color: white;
-    border: none;
-}
-
-.btn-sm.remove-item:hover {
-    background-color: #c82333;
-}
-
-
-.custom-btn {
-    background-color: #007bff;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: bold;
-    text-transform: uppercase;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-}
-
-.custom-btn:hover {
-    background-color: #0056b3; 
-    box-shadow: 0 6px 15px rgba(0, 86, 179, 0.4);
-    transform: translateY(-2px);
-}
-
-.custom-btn:active {
-    transform: translateY(1px);
-    box-shadow: 0 3px 8px rgba(0, 86, 179, 0.3);
-}
-
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    gap: 8px;
-}
-
-
-.pagination .btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s ease-in-out;
-    border: none;
-    cursor: pointer;
-}
-
-.pagination .btn:hover {
-    background-color: #0056b3;
-}
-
-
-.pagination .btn.active {
-    background-color: #0056b3;
-    font-weight: bold;
-    border: 2px solid white;
-}
-
-.pagination .btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-</style>
+  /* Black and white theme styling */
+  .btn-sm {
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 5px;
+      transition: all 0.3s ease-in-out;
+  }
+  
+  .btn-sm:hover {
+      transform: scale(1.05);
+  }
+  
+  .btn-sm.add-to-cart {
+      background-color: #000000; 
+      color: white;
+      border: none;
+  }
+  
+  .btn-sm.add-to-cart:hover {
+      background-color: #333333;
+  }
+  
+  .btn-sm.remove-item {
+      background-color: #333333; 
+      color: white;
+      border: none;
+  }
+  
+  .btn-sm.remove-item:hover {
+      background-color: #000000;
+  }
+  
+  .custom-btn {
+      background-color: #000000;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-radius: 8px;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .custom-btn:hover {
+      background-color: #333333; 
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+  }
+  
+  .custom-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      gap: 8px;
+  }
+  
+  .pagination .btn {
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 5px;
+      background-color: #000000;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease-in-out;
+      border: none;
+      cursor: pointer;
+  }
+  
+  .pagination .btn:hover {
+      background-color: #333333;
+  }
+  
+  .pagination .btn.active {
+      background-color: #333333;
+      font-weight: bold;
+      border: 2px solid white;
+  }
+  
+  .pagination .btn:disabled {
+      background-color: #666666;
+      cursor: not-allowed;
+  }
+  
+  /* Table styling */
+  .shopping-summery {
+      background-color: #fff;
+      border: 1px solid #ddd;
+  }
+  
+  .shopping-summery .main-heading {
+      background-color: #000;
+      color: #fff;
+  }
+  
+  .shopping-summery tbody tr {
+      border-bottom: 1px solid #eee;
+  }
+  
+  .shopping-summery tbody tr:hover {
+      background-color: #f9f9f9;
+  }
+  
+  /* Modal styling */
+  #sizeSelectionModal .modal-header {
+      background-color: #000;
+      color: #fff;
+  }
+  
+  #sizeSelectionModal .close {
+      color: #fff;
+  }
+  
+  #sizeSelectionModal .modal-footer .btn-secondary {
+      background-color: #666;
+      color: white;
+  }
+  
+  #sizeSelectionModal .modal-footer .btn-primary {
+      background-color: #000;
+      color: white;
+  }
+  
+  /* Empty wishlist styling */
+  .empty-wishlist-container {
+      padding: 40px 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+  }
+  
+  .empty-message {
+      color: #000 !important;
+  }
+  
+  /* Size option buttons */
+  .size-option-btn.selected {
+      background-color: #000 !important;
+      color: white !important;
+      border-color: #000 !important;
+  }
+  </style>
 
 <main class="main">
   <div class="page-header breadcrumb-wrap">
     <div class="container">
-      <div class="breadcrumb">
-        <a href="/" rel="nofollow">Home</a>
-        <span></span> Shop
-        <span></span> My Wishlist
-      </div>
+      
     </div>
   </div>
 

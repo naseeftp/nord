@@ -3,14 +3,12 @@
 <%- include("../../views/partials/user/header") %>
 
 <style>
-    /* Container and General Styling */
     .container {
         max-width: 1200px;
         margin: auto;
         padding: 20px;
     }
     
-    /* Table Styling */
     .table {
         border-collapse: collapse;
         width: 100%;
@@ -19,16 +17,13 @@
         overflow: hidden;
     }
     
-    .table thead {
-        background: #f8f9fa;
-    }
-    
+   
     .table th {
         padding: 15px;
         font-size: 16px;
         text-transform: uppercase;
-        color: #333;
-        border-bottom: 2px solid #ddd;
+        color: #111010;
+        border-bottom: 2px solid #000;
     }
     
     .table td {
@@ -43,18 +38,19 @@
         height: 80px;
         object-fit: cover;
         border-radius: 5px;
+        border: 1px solid #eee;
     }
     
     /* Product Name */
     .product-name a {
         text-decoration: none;
-        color: #333;
+        color: #000;
         font-weight: 600;
         font-size: 16px;
     }
     
     .product-name p {
-        color: #777;
+        color: #555;
         font-size: 14px;
     }
     
@@ -62,7 +58,7 @@
     .price {
         font-size: 16px;
         font-weight: 600;
-        color: #29292B;  /* Jet Black */
+        color: #000000;
     }
     
     /* Quantity Controls */
@@ -77,14 +73,16 @@
         width: 40px;
         height: 30px;
         text-align: center;
-        border: 1px solid #ddd;
+        border: 1px solid #000;
         border-radius: 5px;
+        position: relative;
+        top: 7px;
     }
     
     .increment-button,
     .decrement-button {
         border: none;
-        background: #29292B;  /* Jet Black */
+        background: #000000;
         color: white;
         padding: 5px 10px;
         font-size: 14px;
@@ -94,40 +92,47 @@
     
     .increment-button:hover,
     .decrement-button:hover {
-        background: #3d3d3f;  
+        background: #333333;
     }
     
-  
     .action a {
-        color: #C9C7BA; 
-        font-size: 18px;
+        color: #ffffff;
+        font-size: 14px;
+        background-color: #000000;
+        padding: 6px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
     }
     
     .action a:hover {
-        color: #b5b3a4; 
+        background-color: #333333;
     }
 
     .cart-totals {
         background: #f8f9fa;
         padding: 20px;
         border-radius: 10px;
+        border: 1px solid #000;
     }
     
     .cart-totals h4 {
         font-size: 18px;
         font-weight: bold;
-        color: #333;
+        color: #000;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
     }
     
     .cart_total_amount {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: bold;
-        color: #29292B;  
+        color: #000000;
     }
     
-   
     .btn {
-        background: #29292B; 
+        background: #000000;
         color: white;
         padding: 12px;
         border-radius: 5px;
@@ -136,237 +141,280 @@
         text-align: center;
         margin-top: 15px;
         text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
     }
     
     .btn:hover {
-        background: #3d3d3f;  /* Slightly lighter Jet Black */
+        background: #333333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     
-    .cart-empty {
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
+    /* Empty cart styling */
+    .empty-cart-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        width: 100%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        position: relative;
+        left: 162px;
     }
     
-    .cart-empty a {
-        text-decoration: none;
-        color: #29292B;  
+    .empty-cart-message {
+        margin-top: 20px;
+        font-size: 22px;
+        font-weight: 600;
+        color: #000;
+    }
+    
+    .empty-cart-subtitle {
+        margin: 10px 0 30px;
         font-size: 16px;
+        color: #555;
+    }
+    
+    .start-shopping-btn {
+        background: #000;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        border: none;
+    }
+    
+    .start-shopping-btn:hover {
+        background: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .pagination {
-  margin: 20px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
 
-.pagination a, .pagination span {
-  padding: 8px 16px;
-  text-decoration: none;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .pagination a, .pagination span {
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.pagination a.btn {
-  background: #29292B;
-  color: white;
-  font-size: 14px;
-  padding: 6px 12px;
-  margin-top: 4px;
-}
+    .pagination a.btn {
+        background: #000000;
+        color: white;
+        font-size: 14px;
+        padding: 6px 12px;
+        margin-top: 4px;
+    }
 
-.pagination a.page-link {
-  background: #f8f9fa;
-  color: #333;
-  border: 1px solid #ddd;
-  height: 36px;
-  width: 36px;
-  padding: 0;
-}
+    .pagination a.page-link {
+        background: #f8f9fa;
+        color: #000;
+        border: 1px solid #000;
+        height: 36px;
+        width: 36px;
+        padding: 0;
+    }
 
-.pagination span.current-page {
-  background: #C9C7BA;
-  color: #29292B;
-  border: 1px solid #C9C7BA;
-  height: 36px;
-  width: 36px;
-  padding: 0;
-}
+    .pagination span.current-page {
+        background: #000;
+        color: #fff;
+        border: 1px solid #000;
+        height: 36px;
+        width: 36px;
+        padding: 0;
+    }
 
-.pagination a:hover:not(.current-page) {
-  background: #3d3d3f;
-  color: white;
-}
+    .pagination a:hover:not(.current-page) {
+        background: #333;
+        color: white;
+    }
 </style>
-    <main class="main">
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="" rel="nofollow">Home</a>
-                    <span></span> Shop
-                    <span></span> Your Cart
-                </div>
-            </div>
+
+
+
+
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+          
         </div>
-        <section class="mt-50 mb-50">
-            <div class="container">
-                <div class="row">
-                    <div class="col-9">
-                        <% if (cart.items.length > 0) { %>
-                        <div class="table-responsive">
-                            <table class="table shopping-summery text-center clean">
-                                <thead>
-                                    <tr class="main-heading">
-                                        <th scope="col">Image</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">size</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Remove</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                        <% cart.items.forEach(item => { %>
-                                            <tr>
-                                                <td class="image product-thumbnail">
-                                                    <img src="/uploads/re-image/<%= item.productId.productImage[0] %>" alt="#" />
-                                                </td>
-                                                <td class="product-des product-name">
-                                                    <h5 class="product-name">
-                                                        <a href="cart"><%= item.productId.productName %></a>
-                                                    </h5>
-                                                </td>
-                                                <td class="product-des product-name">
-                                                    <h5 class="product-name">
-                                                        <%= item.selectedSize %>
-                                                    </h5>
-                                                </td>
+    </div>
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-9">
+                    <% if (cart.items.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table shopping-summery text-center clean">
+                            <thead>
+                                <tr class="main-heading">
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Size</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% cart.items.forEach(item => { %>
+                                    <tr>
+                                        <td class="image product-thumbnail">
+                                            <img src="/uploads/re-image/<%= item.productId.productImage[0] %>" alt="#" />
+                                        </td>
+                                        <td class="product-des product-name">
+                                            <h5 class="product-name">
+                                                <a href="cart"><%= item.productId.productName %></a>
+                                            </h5>
+                                        </td>
+                                        <td class="product-des product-name">
+                                            <h5 class="product-name">
+                                                <%= item.selectedSize %>
+                                            </h5>
+                                        </td>
 
-                                                <td class="price" data-title="Price">₹<span>
-                                                    <text id="subTotal<%= item._id %>">
-                                                   <%= item.productId.salePrice * item.quantity %>
-                                                 
+                                        <td class="price" data-title="Price">₹<span>
+                                            <text id="subTotal<%= item._id %>">
+                                           <%= item.productId.salePrice * item.quantity %>
+                                         
 
-                                                    </text><br>
-                                                    <small class="text-muted text-nowrap">₹<span id="price">
-                                                        <%= item.productId.salePrice %>
-                                                    </span> / per item </small>
-                                                </td>
-                                                <td class="text-center" data-title="Stock">
-                                                    <div class="detail-qty border radius m-auto">
-                                                        <div class="quantity-control">
-                                                           
-                                                                            <button class="btn btn-sm decrement-button"
-                                                                            onclick="changeQuantity('<%= item._id %>', '<%= item.quantity %>', -1, '<%= item.productId.salePrice %>', '<%= item._id %>','<%=item.selectedSize%>')">-
-                                                                        </button>
+                                            </text><br>
+                                            <small class="text-muted text-nowrap">₹<span id="price">
+                                                <%= item.productId.salePrice %>
+                                            </span> / per item </small>
+                                        </td>
+                                        <td class="text-center" data-title="Stock">
+                                            <div class="detail-qty border radius m-auto">
+                                                <div class="quantity-control">
+                                                                    <button class="btn btn-sm decrement-button"
+                                                                    onclick="changeQuantity('<%= item._id %>', '<%= item.quantity %>', -1, '<%= item.productId.salePrice %>', '<%= item._id %>','<%=item.selectedSize%>')">-
+                                                                </button>
 
-                                                                      
-                                                                        <input class="quantity-input"
-                                                                            id="cartProductQuantity<%= item._id %>"
-                                                                            value="<%= item.quantity %>"
-                                                                            style="width: 45px;" type="text" readonly>
+                                                              
+                                                                <input class="quantity-input"
+                                                                    id="cartProductQuantity<%= item._id %>"
+                                                                    value="<%= item.quantity %>"
+                                                                    style="width: 45px;" type="text" readonly>
 
-                                                                     
-                                                                        <button class="btn btn-sm increment-button"
-                                                                            onclick="changeQuantity('<%= item._id %>', '<%= item.quantity %>', 1, '<%= item.productId.salePrice %>', '<%= item._id %>','<%=item.selectedSize%>')">+
-                                                                        </button>
-                                                           
-
-
-                                                            </div>
+                                                             
+                                                                <button class="btn btn-sm increment-button"
+                                                                    onclick="changeQuantity('<%= item._id %>', '<%= item.quantity %>', 1, '<%= item.productId.salePrice %>', '<%= item._id %>','<%=item.selectedSize%>')">+
+                                                                </button>
                                                     </div>
-                                                </td>
-                                                <td class="action" data-title="Remove">
-                                                    <a class="btn btn-sm" href="#" onclick="confirmRemove('<%= item._id %>')">
-                                                        <i class="fi-rs-trash"></i>
-                                                        <span style="color: white;">Remove</span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        <% }) %>
-                                    <% } else { %>
-                                        <!-- When cart is empty -->
-                                        <tr>
-                                            <td colspan="5" class="cart-empty">
-                                                <p>No items found in Cart</p>
-                                                <a href="/shop" class="btn btn-primary">Start Shopping</a>
-                                            </td>
-                                        </tr>
-                                    <% } %>
-                                    <input type="hidden" name="" id="totalabc" value="">
+                                            </div>
+                                        </td>
+                                        <td class="action" data-title="Remove">
+                                            <a href="#" onclick="confirmRemove('<%= item._id %>')">
+                                                <i class="fi-rs-trash"></i>
+                                                Remove
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% } else { %>
+                    <div class="empty-cart-container">
+                        <!-- SVG Cart Icon -->
+                        <svg width="180" height="180" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Shopping Cart -->
+                            <path d="M60,60 L200,60 L180,130 L80,130 Z" fill="none" stroke="#000" stroke-width="4" />
+                            <!-- Cart Handle -->
+                            <path d="M60,60 C40,60 30,40 40,30" fill="none" stroke="#000" stroke-width="4" />
+                            <!-- Wheels -->
+                            <circle cx="100" cy="160" r="10" fill="#f0f0f0" stroke="#000" stroke-width="3" />
+                            <circle cx="160" cy="160" r="10" fill="#f0f0f0" stroke="#000" stroke-width="3" />
+                            <!-- Empty State - Dotted Outline -->
+                            <rect x="90" y="80" width="100" height="30" rx="2" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="4,4" />
+                            <!-- X Mark -->
+                            <path d="M120,90 L140,110 M140,90 L120,110" stroke="#000" stroke-width="3" />
+                            <!-- Shopping List -->
+                            <rect x="50" y="180" width="140" height="30" rx="2" fill="none" stroke="#000" stroke-width="2" />
+                            <line x1="70" y1="190" x2="110" y2="190" stroke="#000" stroke-width="2" />
+                            <line x1="70" y1="200" x2="150" y2="200" stroke="#000" stroke-width="2" />
+                        </svg>
+                        
+                        <h2 class="empty-cart-message">Your cart is empty</h2>
+                        <p class="empty-cart-subtitle">Looks like you haven't added anything to your cart yet</p>
+                        <a href="/shop" class="start-shopping-btn">Start Shopping</a>
+                    </div>
+                    <% } %>
+                </div>
+                
+                <% if (cart.items.length > 0) { %> 
+                <div class="col-3">
+                    <div class="border p-md-4 p-30 border-radius cart-totals">
+                        <div class="heading_s1 mb-3">
+                            <h4>PRICE DETAILS</h4>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="cart_total_label">Total</td>
+                                        <td class="cart_total_amount">
+                                            <span class="font-lg fw-900 text-brand">₹
+                                                <text id="total"><%= totalPrice %></text>
+                                            </span>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
+                        <a href="/checkout?userId=<%= user._id %>" class="btn">
+                            <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut
+                        </a>
                     </div>
-                    
-                    <% if (cart.items.length > 0) { %> 
-                    <div class="col-3">
-                        <div class="border p-md-4 p-30 border-radius cart-totals">
-                            <div class="heading_s1 mb-3">
-                                <h4>PRICE DETAILS</h4>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                   
-                                          
-                                        </tr>
-                                        <tr>
-                                            <td class="cart_total_label">Total</td>
-                                            <td class="cart_total_amount">
-                                                <span class="font-lg fw-900 text-brand">₹
-                                                    <text id="total"><%= totalPrice %></text>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <a href="/checkout?userId=<%= user._id %>" class="btn">
-                                <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut
-                            </a>
-                        </div>
-                    </div>
-                    <% } %>
-
-                </div>
-            </div>
-            <% if (totalPages > 1) { %>
-                <div class="pagination">
-                  <% if (currentPage > 1) { %>
-                    <a href="/cart?page=<%= currentPage - 1 %>" class="btn">Previous</a>
-                  <% } %>
-                
-                  <% for (let i = 1; i <= totalPages; i++) { %>
-                    <% if (i === currentPage) { %>
-                      <span class="current-page"><%= i %></span>
-                    <% } else { %>
-                      <a href="/cart?page=<%= i %>" class="page-link"><%= i %></a>
-                    <% } %>
-                  <% } %>
-                
-                  <% if (currentPage < totalPages) { %>
-                    <a href="/cart?page=<%= currentPage + 1 %>" class="btn">Next</a>
-                  <% } %>
                 </div>
                 <% } %>
-        </section>
+            </div>
+        </div>
+        <% if (totalPages > 1) { %>
+            <div class="pagination">
+              <% if (currentPage > 1) { %>
+                <a href="/cart?page=<%= currentPage - 1 %>" class="btn">Previous</a>
+              <% } %>
+            
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <% if (i === currentPage) { %>
+                  <span class="current-page"><%= i %></span>
+                <% } else { %>
+                  <a href="/cart?page=<%= i %>" class="page-link"><%= i %></a>
+                <% } %>
+              <% } %>
+            
+              <% if (currentPage < totalPages) { %>
+                <a href="/cart?page=<%= currentPage + 1 %>" class="btn">Next</a>
+              <% } %>
+            </div>
+        <% } %>
+    </section>
 </main>
-   
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   
 
   function changeQuantity(productId, cartQuantity, count, productPrice, i, selectedSize) {
-    console.log('arguments of the function: ', arguments);
+ 
 
     const cartProductQuantityElement = document.querySelector(`#cartProductQuantity${i}`);
     const subtotalElement = document.querySelector(`#subTotal${i}`);

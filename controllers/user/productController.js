@@ -6,39 +6,79 @@ const Cart=require("../../models/cartSchema")
 
 
 
-const productDetails=async(req,res)=>{
-  try {
+// const productDetails=async(req,res)=>{
+//   try {
 
-    const  productId=req.query.id;
-    const userId=req.session.user;
-    const userData=await User.findById(userId);
-     const product = await Product.findById(productId).populate('category');
-    const findCategory=Product.category;
-    const  categoryOffer=findCategory?.categoryoffer||0;
-    const productOffer=product.productOffer||0;
-    const totalOffer=categoryOffer+productOffer;
+//     const  productId=req.query.id;
+//     const userId=req.session.user;
+//     const userData=await User.findById(userId);
+//      const product = await Product.findById(productId).populate('category');
+//     const findCategory=Product.category;
+//     const  categoryOffer=findCategory?.categoryoffer||0;
+//     const productOffer=product.productOffer||0;
+//     const totalOffer=categoryOffer+productOffer;
      
-   if(!product||product.isBlocked){
-   return res.render("page-404")
+//    if(!product||product.isBlocked){
+//    return res.render("page-404")
 
-   }
+//    }
 
-    res.render("productdetails",{
-    user:userData,
-    product:product,
-    sizes:product.sizes,
-    totalOffer:totalOffer,
-    category:findCategory,
+//     res.render("productdetails",{
+//     user:userData,
+//     product:product,
+//     sizes:product.sizes,
+//     totalOffer:totalOffer,
+//     category:findCategory,
 
 
-    })
-} catch (error) {
-    console.log('error for fetching data', error);
-    res.redirect('/pageNotFound')
+//     })
+// } catch (error) {
+//     console.log('error for fetching data', error);
+//     res.redirect('/pageNotFound')
+//   }
+
+// }
+const productDetails = async (req, res) => {
+  try {
+    const productId = req.query.id;
+    const userId = req.session.user;
+    
+    // Fetch all necessary data in parallel
+    const [userData, product, cart] = await Promise.all([
+      userId ? User.findById(userId) : Promise.resolve(null),
+      Product.findById(productId).populate('category'),
+      userId ? Cart.findOne({ userId }) : Promise.resolve(null)
+    ]);
+
+    if (!product || product.isBlocked) {
+      return res.render("page-404");
+    }
+
+    const findCategory = product.category;
+    const categoryOffer = findCategory?.categoryoffer || 0;
+    const productOffer = product.productOffer || 0;
+    const totalOffer = categoryOffer + productOffer;
+
+    // Calculate counts
+    const wishlistCount = userData?.wishlist?.length || 0;
+    const cartCount = cart?.items?.length || 0;
+
+    res.render("productdetails", {
+      user: userData,
+      product: product,
+      sizes: product.sizes,
+      totalOffer: totalOffer,
+      category: findCategory,
+      // Add these counts
+      wishlistCount,
+      cartCount
+    });
+
+  } catch (error) {
+    console.log('Error fetching product details:', error);
+    res.redirect('/pageNotFound');
   }
-
-}
-
+};
 
 const addToCart = async (req, res) => {
   try {

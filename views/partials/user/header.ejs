@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
 
+<!DOCTYPE html>
+
+<html lang="en">
 <head>
   <title>NORD</title>
   <meta charset="utf-8">
@@ -285,41 +286,51 @@
           </div>
 
               
-
-
-                
-
-        <div class="col-3 col-lg-auto">
-          <ul class="list-unstyled d-flex m-0">
-            <li class="d-none d-lg-block">
-              <a href="/wishlist" class="text-uppercase mx-3">Wishlist <span class="wishlist-count"></span>
-              </a>
-            </li>
-            <li class="d-none d-lg-block">
-            
-
-              <a href="/cart">Cart</a>
-            </li>
-            <li class="d-lg-none">
-              <a href="#" class="mx-2">
-                <svg width="24" height="24" viewBox="0 0 24 24">
-                  <use xlink:href="#heart"></use>
-                </svg>
-              </a>
-            </li>
-            <li class="d-lg-none">
-              <a href="#" class="mx-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
-                aria-controls="offcanvasCart">
-                <svg width="24" height="24" viewBox="0 0 24 24">
-                  <use xlink:href="#cart"></use>
-                </svg>
-              </a>
-            </li>
-          
-          </ul>
-        </div>
+          <div class="col-3 col-lg-auto">
+            <ul class="list-unstyled d-flex m-0 align-items-center">
+              <li class="d-none d-lg-block">
+                <a href="/wishlist" class="mx-3 position-relative">
+                  <svg width="24" height="24" viewBox="0 0 24 24" class="icon-hover">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                  <span id="wishlistCount" class="wishlist-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <%= wishlistCount || 0 %>
+                  </span>
+                </a>
+              </li>
+              <li class="d-none d-lg-block">
+                <a href="/cart" class="mx-3 position-relative">
+                  <svg width="24" height="24" viewBox="0 0 24 24" class="icon-hover">
+                    <use xlink:href="#cart"></use>
+                  </svg>
+                  <span id="cartCount" class="cart-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <%= cartCount || 0 %>
+                  </span>
+                </a>
+              </li>
+              <li class="d-lg-none">
+                <a href="#" class="mx-2">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+              </li>
+              <li class="d-lg-none">
+                <a href="#" class="mx-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
+                  aria-controls="offcanvasCart">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#cart"></use>
+                  </svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+        
 
       </div>
 
     </div>
   </nav>
+
+
+  

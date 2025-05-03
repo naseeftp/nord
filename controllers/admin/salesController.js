@@ -1,4 +1,7 @@
-const ale = require("../../models/salesSchema");
+
+
+
+const Sale = require("../../models/salesSchema");
 const Order = require("../../models/orderSchema");
 const Product = require("../../models/productSchema");
 const PDFDocument = require('pdfkit');
@@ -49,49 +52,55 @@ const loadSalesPage = async (req, res) => {
 
         let totalRegularPrice = 0;
         let totalFinalAmount = 0;
-        let totalDeliveryCharge=0;
-        let deliveryCharge=50;
+        let totalDeliveryCharge = 0;
+        const deliveryCharge = 50;
 
         const sales = orders.map(order => {
+            const deliveredItemsAmount = order.orderItems.reduce((sum, item) => {
+                if (item.status === 'Delivered') {
+                    return sum + (item.price * item.quantity);
+                }
+                return sum;
+            }, 0);
+
             const orderRegularPrice = order.orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const finalAmountWithoutDelivery = order.finalAmount
+
             totalRegularPrice += orderRegularPrice;
-            totalFinalAmount += finalAmountWithoutDelivery;
+            totalFinalAmount += deliveredItemsAmount;
+            totalDeliveryCharge += order.deliveryCharge || 0;
 
-
-           totalDeliveryCharge+=order.deliveryCharge||0;
             const couponDiscount = order.discount ? (order.totalPrice - order.finalAmount) : 0;
 
             return {
                 orderId: order.orderId,
-                amount: finalAmountWithoutDelivery,
+                amount: deliveredItemsAmount, 
                 discount: order.discount || 0, 
                 coupon: couponDiscount,
-                deliveryCharge:deliveryCharge,
+                deliveryCharge: deliveryCharge,
                 lessPrice: totalDeliveryCharge,
                 date: order.createdOn,
                 items: order.orderItems.map(item => ({
                     name: item.productName || item.product.name,
                     quantity: item.quantity,
                     regularPrice: item.price,
-                    finalPrice: item.price 
+                    finalPrice: item.status === 'Delivered' ? item.price : 0, 
+                    status: item.status 
                 }))
             };
         });
 
         const salesData = {
-            shopName:'NORD',
-            reportType:reportType||'default',
-            startDate:startDate||null,
-            endDate:endDate||null,
+            shopName: 'NORD',
+            reportType: reportType || 'default',
+            startDate: startDate || null,
+            endDate: endDate || null,
             sales,
             totalSales: totalFinalAmount,
             orderCount: sales.length,
             discounts: sales.reduce((sum, sale) => sum + sale.discount, 0),
             coupons: sales.reduce((sum, sale) => sum + sale.coupon, 0),
-            deliveryCharge:deliveryCharge,
+            deliveryCharge: deliveryCharge,
             lessPrices: totalDeliveryCharge,
-            
         };
 
         if (format === 'pdf') {
@@ -110,24 +119,23 @@ const loadSalesPage = async (req, res) => {
     }
 };
 
-  const createSaleRecord = async (order) => {
+const createSaleRecord = async (order) => {
     try {
-      const sale = new Sale({
-        orderId: order._id,
-        amount: order.totalAmount,
-        discount: order.discount || 0,
-        coupon: order.couponDiscount || 0,
-        date: order.orderDate || new Date()
-      });
-      
-      await sale.save();
-      return sale;
+        const sale = new Sale({
+            orderId: order._id,
+            amount: order.totalAmount,
+            discount: order.discount || 0,
+            coupon: order.couponDiscount || 0,
+            date: order.orderDate || new Date()
+        });
+        
+        await sale.save();
+        return sale;
     } catch (error) {
-      console.error('Error creating sale record:', error);
-      throw error;
+        console.error('Error creating sale record:', error);
+        throw error;
     }
-  };
-
+};
 
 
 const generatePDF = async (res, salesData) => {
@@ -188,7 +196,7 @@ const generatePDF = async (res, salesData) => {
 
     const tableTop = doc.y;
     const tableLeft = 50;
-    const colWidths = [80, 110, 90, 90, 90];
+    const colWidths = [80, 110, 80, 80, 80, 80]; // Adjusted for new Delivery Charge column
     const rowHeight = 25;
 
     doc.fillColor('#f0f0f0')
@@ -199,7 +207,7 @@ const generatePDF = async (res, salesData) => {
         .font('Helvetica-Bold')
         .fontSize(10);
 
-    const headers = ["Date", "Order ID", "Amount", "Discounts", "Coupons"];
+    const headers = ["Date", "Order ID", "Amount", "Discounts", "Coupons", "Delivery Charge"];
     let xPosition = tableLeft + 10;
 
     headers.forEach((header, i) => {
@@ -257,6 +265,12 @@ const generatePDF = async (res, salesData) => {
             width: colWidths[4] - 20,
             align: 'right'
         });
+        xPosition += colWidths[4];
+
+        doc.text(`Rs. ${sale.deliveryCharge.toLocaleString()}`, xPosition, yPosition + 8, {
+            width: colWidths[5] - 20,
+            align: 'right'
+        });
 
         yPosition += rowHeight;
         drawTableRow(yPosition);
@@ -286,7 +300,7 @@ const generatePDF = async (res, salesData) => {
     const summaryLeft = 350;
     const summaryTop = yPosition + 30;
     const summaryWidth = 200;
-    const summaryHeight = 120;
+    const summaryHeight = 140; // Increased height to accommodate new row
 
     doc.roundedRect(summaryLeft, summaryTop, summaryWidth, summaryHeight, 5)
         .fillAndStroke('#f7f7f7', '#cccccc');
@@ -317,6 +331,11 @@ const generatePDF = async (res, salesData) => {
         .font('Helvetica-Bold')
         .text(`Rs. ${salesData.discounts.toLocaleString()}`, summaryLeft + 100, summaryTop + 100);
 
+    doc.font('Helvetica')
+        .text(`Total Delivery Charge:`, summaryLeft + 15, summaryTop + 120)
+        .font('Helvetica-Bold')
+        .text(`Rs. ${salesData.lessPrices.toLocaleString()}`, summaryLeft + 100, summaryTop + 120);
+
     const pageRange = doc.bufferedPageRange();
     const pageCount = pageRange.count;
 
@@ -342,11 +361,6 @@ const generatePDF = async (res, salesData) => {
 
     doc.end();
 };
-
-
-
-
-
 
 const generateExcel = async (res, salesData) => {
     const workbook = new ExcelJS.Workbook();
@@ -386,7 +400,8 @@ const generateExcel = async (res, salesData) => {
         { header: 'Order ID', key: 'orderId', width: 30 },
         { header: 'Amount', key: 'amount', width: 15 },
         { header: 'Discounts', key: 'discount', width: 15 },
-        { header: 'Coupons', key: 'coupon', width: 15 }
+        { header: 'Coupons', key: 'coupon', width: 15 },
+        { header: 'Delivery Charge', key: 'deliveryCharge', width: 15 }
     ];
 
     worksheet.addRow(['Detailed Sales']);
@@ -396,7 +411,8 @@ const generateExcel = async (res, salesData) => {
             orderId: sale.orderId.toString(),
             amount: `Rs. ${sale.amount.toLocaleString()}`,
             discount: `Rs. ${sale.discount.toLocaleString()}`,
-            coupon: `Rs. ${sale.coupon.toLocaleString()}`
+            coupon: `Rs. ${sale.coupon.toLocaleString()}`,
+            deliveryCharge: `Rs. ${sale.deliveryCharge.toLocaleString()}`
         });
     });
 
@@ -406,6 +422,7 @@ const generateExcel = async (res, salesData) => {
     worksheet.addRow(['Total Orders', '', salesData.orderCount]);
     worksheet.addRow(['Total Coupons', '', `Rs. ${salesData.coupons.toLocaleString()}`]);
     worksheet.addRow(['Total Discounts', '', `Rs. ${salesData.discounts.toLocaleString()}`]);
+    worksheet.addRow(['Total Delivery Charge', '', `Rs. ${salesData.lessPrices.toLocaleString()}`]);
     worksheet.addRow([]);
 
     worksheet.getRow(1).font = { bold: true, size: 14 };
@@ -426,10 +443,9 @@ const generateExcel = async (res, salesData) => {
     await workbook.xlsx.write(res);
 };
 
-  
-  module.exports={
-  loadSalesPage,
-  createSaleRecord,
-  generatePDF,
-  generateExcel
- }
+module.exports = {
+    loadSalesPage,
+    createSaleRecord,
+    generatePDF,
+    generateExcel
+};

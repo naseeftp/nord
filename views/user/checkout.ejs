@@ -681,6 +681,10 @@
                         <td><em>₹<%=locals.deliveryCharge%></em></td>
                     </tr>
                     <tr>
+                        <th>Total price</th>
+                        <td><em>₹<%=locals. grandTotal%></em></td>
+                    </tr>
+                    <tr>
                         <th>Discount</th>
                         <td id="discount">
                             <% if (locals.offerPrice) { %>
@@ -691,8 +695,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Total</th>
-                        <td class="summary-total" id="totalValue">₹<%= grandTotal %></td>
+                        <th>Final amount</th>
+                        <td class="summary-total" id="totalValue">₹<%=discountedTotal %></td>
                     </tr>
                 </table>
                 <button type="button" class="checkout-button" onclick="placeOrder()">Complete Order</button>
@@ -732,7 +736,7 @@ async function placeOrder() {
     const selectedPayment = document.querySelector('input[name="payment_option"]:checked');
     const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
     const paymentMethod = selectedPayment?.value.trim();
-    const grandTotal = parseFloat('<%=grandTotal%>');
+    const grandTotal = parseFloat('<%=discountedTotal %>');
 
     if (!selectedAddress) {
         Swal.fire({

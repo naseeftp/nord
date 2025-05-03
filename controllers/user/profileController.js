@@ -6,7 +6,22 @@ const bcrypt = require("bcrypt");
 const env = require("dotenv").config();
 const session = require("express-session");
 const Wallet=require('../../models/walletSchema')
+const Cart=require('../../models/cartSchema')
 
+
+async function getUserCounts(userId) {
+    if (!userId) return { wishlistCount: 0, cartCount: 0 };
+    
+    const [user, cart] = await Promise.all([
+      User.findById(userId),
+      Cart.findOne({ userId })
+    ]);
+    
+    return {
+      wishlistCount: user?.wishlist?.length || 0,
+      cartCount: cart?.items?.length || 0
+    };
+  }
 
 function generateOtp() {
     const digits = "1234567890";
@@ -49,7 +64,17 @@ const sendVerificationEmail = async (email, otp) => {
 
 const getForgotPassPage = async (req, res) => {
     try {
-        res.render("forgot-password");
+        const { wishlistCount, cartCount } = await getUserCounts(req.session.user);
+
+        res.render("forgot-password",
+            {
+                wishlistCount,
+                cartCount 
+
+            }
+
+
+        );
     } catch (error) {
         res.redirect("/pageNotFound");
     }
@@ -57,12 +82,15 @@ const getForgotPassPage = async (req, res) => {
 
 const forgotEmailValid = async (req, res) => {
     try {
+        const { wishlistCount, cartCount } = await getUserCounts(req.session.user);
         const email = req.body.email;
         const findUser = await User.findOne({ email: email });
 
         if (!findUser) {
             return res.render("forgot-password", {
                 message: "User with this email doesn't exist",
+                wishlistCount,
+                cartCount
             });
         }
 
@@ -74,11 +102,16 @@ const forgotEmailValid = async (req, res) => {
             req.session.email = email;
             res.render("forgotPass-otp", {
                 message: "", 
+                wishlistCount,
+                cartCount
             });
             console.log("OTP:", otp);
         } else {
             res.render("forgot-password", {
                 message: "Failed to send OTP. Please try again.",
+                wishlistCount,
+                cartCount
+
             });
         }
     } catch (error) {
@@ -89,6 +122,7 @@ const forgotEmailValid = async (req, res) => {
 const verifyForgotPassOtp=async(req,res)=>{
     try {
         const enteredOtp=req.body.otp;
+        const { wishlistCount, cartCount } = await getUserCounts(req.session.user);
         if(enteredOtp===req.session.userOtp){
             res.json({success:true,redirectUrl:"/reset-password"});
         }else{
@@ -103,7 +137,11 @@ const verifyForgotPassOtp=async(req,res)=>{
 
 const getResetPassPage=async(req,res)=>{
     try {
-res.render("reset-password");
+res.render("reset-password",{
+    wishlistCount,
+    cartCount 
+
+});
        
     } catch (error) {
      res.redirect("/pageNotFound");
@@ -167,6 +205,7 @@ const resetPassword = async (req, res) => {
 const userProfile=async(req,res)=>{
     try {
         const userId=req.session.user;
+        const { wishlistCount, cartCount } = await getUserCounts(userId);
         const userData=await  User.findById(userId);
         let wallet= await Wallet.findOne({userId:userId});
         const addressData=await Address.findOne({userId : userId});
@@ -182,7 +221,9 @@ const userProfile=async(req,res)=>{
         orders: orders || [],
         searchQuery: req.query || {},
         wallet,
-        transactions: wallet.transactions
+        transactions: wallet.transactions,
+        wishlistCount,
+        cartCount
 
         })
 
@@ -196,6 +237,7 @@ const userProfile=async(req,res)=>{
 const getOrders = async (req, res) => {
     try {
       const userId = req.session.user;
+      const { wishlistCount, cartCount } = await getUserCounts(userId);
       if (!userId) {
         return res.status(401).send('User not found');
       }
@@ -225,7 +267,9 @@ const getOrders = async (req, res) => {
         totalPages,
         totalOrders,
         searchQuery,
-        noMatch: searchQuery && orders.length === 0
+        noMatch: searchQuery && orders.length === 0,
+        wishlistCount,
+        cartCount
       });
     } catch (error) {
       console.error('Error in getting orders:', error);
@@ -238,6 +282,7 @@ const getOrders = async (req, res) => {
 const getAddress = async (req, res) => {
     try {
       const userId = req.session.user;
+      const { wishlistCount, cartCount } = await getUserCounts(userId);
       if (!userId) {
         return res.status(401).send('Unauthorized');
       }
@@ -267,7 +312,10 @@ const getAddress = async (req, res) => {
         user: userData,
         userAddress: { address: paginatedAddressData ? paginatedAddressData.address : [] },
         currentPage,
-        totalPages
+        totalPages,
+        wishlistCount,
+        cartCount
+  
       });
     } catch (error) {
       console.error('Error in getAddress:', error);
@@ -276,7 +324,13 @@ const getAddress = async (req, res) => {
   };
 const changeEmail=async(req,res)=>{
 try {
-    res.render("change-email");
+    const userId = req.session.user;
+    const { wishlistCount, cartCount } = await getUserCounts(userId);
+    res.render("change-email",{
+        wishlistCount,
+        cartCount
+
+    });
 } catch (error) {
     res.redirect("/pageNotFound")
 }
@@ -362,7 +416,16 @@ const updateEmail=async(req,res)=>{
 
 const changePassword=async(req,res)=>{
 try {
-    res.render("updatePassword");
+    const userId = req.session.user;
+    const { wishlistCount, cartCount } = await getUserCounts(userId);
+    res.render("updatePassword",
+        {
+            wishlistCount,
+            cartCount
+      
+
+        }
+    );
   } catch (error) {
     res.redirect("/pageNotFound");
     
@@ -427,7 +490,12 @@ try {
 const addAddress=async(req,res)=>{
 try {
     const user=req.session.user;
-    res.render("add-address",{user:user})
+    const { wishlistCount, cartCount } = await getUserCounts(user);
+    res.render("add-address",{user:user,
+        wishlistCount,
+        cartCount
+  
+    })
     
 } catch (error) {
     res.redirect("/pageNotFound")
@@ -465,6 +533,7 @@ const editAddress=async (req,res)=>{
 try {
  const addressId=req.query.id;
  const user=req.session.user;
+ const { wishlistCount, cartCount } = await getUserCounts(user);
  const currentAddress=await Address.findOne({
 "address._id":addressId,
 });
@@ -480,7 +549,11 @@ if(!addressData){
  return res.redirect("/pageNotFound")
 
 }
-res.render("edit-address",{address:addressData,user:user})
+res.render("edit-address",{address:addressData,user:user,
+    wishlistCount,
+    cartCount
+
+})
 } catch (error) {
     console.error("error in edit address",error);
     res.redirect("/pageNotFound")
@@ -562,11 +635,16 @@ res.redirect('/useraddress')
 const getUpdatePassword=async(req,res)=>{
 try {
    const userId=req.session.user;
+   const { wishlistCount, cartCount } = await getUserCounts(userId);
    if(!userId){
     return res.redirect('/login')
    } 
     const userData=await User.findById(userId);
-    res.render('updatePassword',{user:userData})
+    res.render('updatePassword',{user:userData,
+        wishlistCount,
+        cartCount
+  
+    })
 
 
 } catch (error) {
@@ -609,12 +687,19 @@ res.json({success:true,message:'password updated successfully'});
 const getEditProfile=async(req,res)=>{
  try {
     const userId=req.session.user
+    const { wishlistCount, cartCount } = await getUserCounts(userId);
     if(!userId){
   
       return res.redirect('/login')
     }
     const userData=await User.findById(userId)
-    res.render("editProfile",{user:userData})
+    res.render("editProfile",{user:userData,
+        wishlistCount,
+        cartCount
+
+
+
+    })
 
 
  } catch (error) {

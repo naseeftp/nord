@@ -18,6 +18,10 @@ const walletController=require('../controllers/user/walletController')
 const Order = require('../models/orderSchema');
 const { generateInvoicePDF } =require("../controllers/user/orderController")
 const fs = require('fs');
+const User = require('../models/userSchema');
+const Cart= require('../models/cartSchema');
+
+
 
 
 
@@ -63,8 +67,9 @@ router.get('/orders',userAuth,profileController.getOrders)
  router.post('/editProfile',userAuth,profileController.updateProfile)
 
 router.get("/shop",userController.loadShoppingPage);
-router.get('/filter',userAuth,userController.filterProduct);
+router.get('/filter',userController.filterProduct);
 router.get('/filterPrice',userController.filterByPrice);
+router.get('/filterColor', userController.filterByColor);
 router.post("/search",userController.searchProducts);
 router.get("/productDetails",productController.productDetails);
 
@@ -124,4 +129,27 @@ router.post('/check-stock',userAuth, orderController.checkStock);
 router.get('/paymentFailure',userAuth,userController.paymentFailure)
 router.get('/wallet/get-balance',userAuth,walletController.getWalletBalance)
 router.get('/wallet/get-data',userAuth,walletController.getWalletData);
+
+router.get('/getNavCounts', async (req, res) => {
+    try {
+      const userId = req.session.user;
+      
+      if(!userId) {
+        return res.json({ status: true, wishlistCount: 0, cartCount: 0 });
+      }
+  
+      const user = await User.findById(userId);
+      const cart = await Cart.findOne({ userId });
+  
+      res.json({
+        status: true,
+        wishlistCount: user?.wishlist?.length || 0,
+        cartCount: cart?.items?.length || 0
+      });
+    } catch (error) {
+      console.error(error);
+      res.json({ status: false });
+    }
+  });
+  
 module.exports=router;

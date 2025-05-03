@@ -1,4 +1,4 @@
-
+<%- include("../../views/partials/user/header") %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -364,6 +364,11 @@
                 <span>Delivery:</span>
                 <span class="price">₹<%= orders.deliveryCharge.toLocaleString() %></span>
               </div>
+              
+              <div class="summary-item">
+                <span>coupon discount:</span>
+                <span class="price">-₹<%= orders.discount.toLocaleString() %></span>
+              </div>
               <div class="summary-item summary-total">
                 <span>Final Amount:</span>
                 <span class="price">₹<%= orders.finalAmount.toLocaleString() %></span>
@@ -666,3 +671,4 @@
 
 </body>
 </html>
+<%- include("../../views/partials/user/footer") %>
