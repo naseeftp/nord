@@ -1,5 +1,4 @@
 
-
 <%- include("../../views/partials/user/header") %>
 
 <style>
@@ -17,7 +16,6 @@
         overflow: hidden;
     }
     
-   
     .table th {
         padding: 15px;
         font-size: 16px;
@@ -154,6 +152,7 @@
     /* Empty cart styling */
     .empty-cart-container {
         display: flex;
+        position: relative;
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -161,9 +160,9 @@
         background-color: #f9f9f9;
         border-radius: 10px;
         width: 100%;
+        left: 135px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        position: relative;
-        left: 162px;
+        margin: 0 auto;
     }
     
     .empty-cart-message {
@@ -203,6 +202,7 @@
         justify-content: center;
         align-items: center;
         gap: 8px;
+        flex-wrap: wrap;
     }
 
     .pagination a, .pagination span {
@@ -244,15 +244,167 @@
         background: #333;
         color: white;
     }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+        .row {
+            flex-direction: column;
+        }
+        
+        .col-9, .col-3 {
+            width: 100%;
+        }
+
+        .cart-totals {
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .product-thumbnail img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .quantity-input {
+            width: 35px;
+            height: 25px;
+        }
+
+        .increment-button, .decrement-button {
+            padding: 3px 8px;
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+
+        .table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .table thead {
+            display: none;
+        }
+
+        .table tbody, .table tr {
+            display: block;
+        }
+
+        .table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            text-align: left;
+        }
+
+        .table td:before {
+            content: attr(data-title);
+            font-weight: bold;
+            min-width: 100px;
+            color: #000;
+        }
+
+        .product-thumbnail img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .empty-cart-container {
+            padding: 20px;
+        }
+
+        .empty-cart-message {
+            font-size: 18px;
+        }
+
+        .empty-cart-subtitle {
+            font-size: 14px;
+        }
+
+        .start-shopping-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .cart-totals {
+            padding: 15px;
+        }
+
+        .cart-totals h4 {
+            font-size: 16px;
+        }
+
+        .cart_total_amount {
+            font-size: 16px;
+        }
+
+        .btn {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .table td {
+            font-size: 12px;
+            padding: 8px;
+        }
+
+        .product-name a {
+            font-size: 14px;
+        }
+
+        .price {
+            font-size: 14px;
+        }
+
+        .quantity-control {
+            gap: 3px;
+        }
+
+        .quantity-input {
+            width: 30px;
+            height: 22px;
+            font-size: 12px;
+        }
+
+        .increment-button, .decrement-button {
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+
+        .action a {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+
+        .pagination a, .pagination span {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .pagination a.page-link, .pagination span.current-page {
+            width: 30px;
+            height: 30px;
+        }
+    }
 </style>
-
-
-
 
 <main class="main">
     <div class="page-header breadcrumb-wrap">
         <div class="container">
-          
         </div>
     </div>
     <section class="mt-50 mb-50">
@@ -275,48 +427,39 @@
                             <tbody>
                                 <% cart.items.forEach(item => { %>
                                     <tr>
-                                        <td class="image product-thumbnail">
-                                            <img src="/uploads/re-image/<%= item.productId.productImage[0] %>" alt="#" />
+                                        <td class="image product-thumbnail" data-title="Image">
+                                            <img src="/Uploads/re-image/<%= item.productId.productImage[0] %>" alt="#" />
                                         </td>
-                                        <td class="product-des product-name">
+                                        <td class="product-des product-name" data-title="Name">
                                             <h5 class="product-name">
                                                 <a href="cart"><%= item.productId.productName %></a>
                                             </h5>
                                         </td>
-                                        <td class="product-des product-name">
+                                        <td class="product-des product-name" data-title="Size">
                                             <h5 class="product-name">
                                                 <%= item.selectedSize %>
                                             </h5>
                                         </td>
-
                                         <td class="price" data-title="Price">₹<span>
                                             <text id="subTotal<%= item._id %>">
                                            <%= item.productId.salePrice * item.quantity %>
-                                         
-
                                             </text><br>
                                             <small class="text-muted text-nowrap">₹<span id="price">
                                                 <%= item.productId.salePrice %>
                                             </span> / per item </small>
                                         </td>
-                                        <td class="text-center" data-title="Stock">
+                                        <td class="text-center" data-title="Quantity">
                                             <div class="detail-qty border radius m-auto">
                                                 <div class="quantity-control">
-                                                                    <button class="btn btn-sm decrement-button"
-                                                                    onclick="changeQuantity('<%= item._id %>', '<%= item.quantity %>', -1, '<%= item.productId.salePrice %>', '<%= item._id %>','<%=item.selectedSize%>')">-
-                                                                </button>
-
-                                                              
-                                                                <input class="quantity-input"
-                                                                    id="cartProductQuantity<%= item._id %>"
-                                                                    value="<%= item.quantity %>"
-                                                                    style="width: 45px;" type="text" readonly>
-
-                                                             
-                                                                <button class="btn btn-sm increment-button"
-                                                                    onclick="changeQuantity('<%= item._id %>', '<%= item.quantity %>', 1, '<%= item.productId.salePrice %>', '<%= item._id %>','<%=item.selectedSize%>')">+
-                                                                </button>
-                                                    </div>
+                                                    <button class="btn btn-sm decrement-button"
+                                                        onclick="changeQuantity('<%= item._id %>', '<%= item.quantity %>', -1, '<%= item.productId.salePrice %>', '<%= item._id %>','<%=item.selectedSize%>')">-</button>
+                                                    <input class="quantity-input"
+                                                        id="cartProductQuantity<%= item._id %>"
+                                                        value="<%= item.quantity %>"
+                                                        style="width: 45px;" type="text" readonly>
+                                                    <button class="btn btn-sm increment-button"
+                                                        onclick="changeQuantity('<%= item._id %>', '<%= item.quantity %>', 1, '<%= item.productId.salePrice %>', '<%= item._id %>','<%=item.selectedSize%>')">+</button>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="action" data-title="Remove">
@@ -332,25 +475,17 @@
                     </div>
                     <% } else { %>
                     <div class="empty-cart-container">
-                        <!-- SVG Cart Icon -->
                         <svg width="180" height="180" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Shopping Cart -->
                             <path d="M60,60 L200,60 L180,130 L80,130 Z" fill="none" stroke="#000" stroke-width="4" />
-                            <!-- Cart Handle -->
                             <path d="M60,60 C40,60 30,40 40,30" fill="none" stroke="#000" stroke-width="4" />
-                            <!-- Wheels -->
                             <circle cx="100" cy="160" r="10" fill="#f0f0f0" stroke="#000" stroke-width="3" />
                             <circle cx="160" cy="160" r="10" fill="#f0f0f0" stroke="#000" stroke-width="3" />
-                            <!-- Empty State - Dotted Outline -->
                             <rect x="90" y="80" width="100" height="30" rx="2" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="4,4" />
-                            <!-- X Mark -->
                             <path d="M120,90 L140,110 M140,90 L120,110" stroke="#000" stroke-width="3" />
-                            <!-- Shopping List -->
                             <rect x="50" y="180" width="140" height="30" rx="2" fill="none" stroke="#000" stroke-width="2" />
                             <line x1="70" y1="190" x2="110" y2="190" stroke="#000" stroke-width="2" />
                             <line x1="70" y1="200" x2="150" y2="200" stroke="#000" stroke-width="2" />
                         </svg>
-                        
                         <h2 class="empty-cart-message">Your cart is empty</h2>
                         <p class="empty-cart-subtitle">Looks like you haven't added anything to your cart yet</p>
                         <a href="/shop" class="start-shopping-btn">Start Shopping</a>
@@ -407,7 +542,6 @@
         <% } %>
     </section>
 </main>
-
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>

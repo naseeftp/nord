@@ -140,29 +140,6 @@ body {
     padding: 0.5rem;
 }
 
-/* .status-badge {
-    padding: 0.5rem 0.9rem;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-}
-
-.status-delivered {
-    background-color: rgba(0, 0, 0, 0.15);
-    color: #000000;
-}
-
-.status-pending {
-    background-color: rgba(102, 102, 102, 0.15);
-    color: #666666;
-}
-
-.status-cancelled {
-    background-color: rgba(153, 153, 153, 0.15);
-    color: #999999;
-} */
-
 .status-badge {
     padding: 0.5rem 0.9rem;
     border-radius: 50px;
@@ -171,47 +148,48 @@ body {
     letter-spacing: 0.3px;
     display: inline-block;
     margin: 0.2rem;
-  }
+}
 
-  .status-pending {
-    background-color: rgba(255, 206, 86, 0.15); /* #FFCE56 */
+.status-pending {
+    background-color: rgba(255, 206, 86, 0.15);
     color: #FFCE56;
-  }
+}
 
-  .status-processing {
-    background-color: rgba(54, 162, 235, 0.15); /* #36A2EB */
+.status-processing {
+    background-color: rgba(54, 162, 235, 0.15);
     color: #36A2EB;
-  }
+}
 
-  .status-shipped {
-    background-color: rgba(255, 99, 132, 0.15); /* #FF6384 */
+.status-shipped {
+    background-color: rgba(255, 99, 132, 0.15);
     color: #FF6384;
-  }
+}
 
-  .status-delivered {
-    background-color: rgba(75, 192, 192, 0.15); /* #4BC0C0 */
+.status-delivered {
+    background-color: rgba(75, 192, 192, 0.15);
     color: #4BC0C0;
-  }
+}
 
-  .status-cancelled {
-    background-color: rgba(255, 159, 64, 0.15); /* #FF9F40 */
+.status-cancelled {
+    background-color: rgba(255, 159, 64, 0.15);
     color: #FF9F40;
-  }
+}
 
-  .status-return-requested {
-    background-color: rgba(153, 102, 255, 0.15); /* #9966FF */
+.status-return-requested {
+    background-color: rgba(153, 102, 255, 0.15);
     color: #9966FF;
-  }
+}
 
-  .status-return-approved {
-    background-color: rgba(0, 196, 180, 0.15); /* #00C4B4 */
+.status-return-approved {
+    background-color: rgba(0, 196, 180, 0.15);
     color: #00C4B4;
-  }
+}
 
-  .status-return-rejected {
-    background-color: rgba(255, 107, 107, 0.15); /* #FF6B6B */
+.status-return-rejected {
+    background-color: rgba(255, 107, 107, 0.15);
     color: #FF6B6B;
-  }
+}
+
 .product-image {
     width: 50px;
     height: 50px;
@@ -284,7 +262,6 @@ body {
     background-color: #f8fafc;
 }
 
-/* Order Status Chart */
 .chart-center-text {
     position: absolute;
     top: 50%;
@@ -343,6 +320,84 @@ body {
 }
 
 /* Responsive adjustments */
+@media (max-width: 1200px) {
+    .dashboard-container {
+        padding: 1.5rem;
+    }
+
+    .stats-card {
+        padding: 1rem;
+    }
+
+    .stats-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .stats-info h3 {
+        font-size: 1.5rem;
+    }
+
+    .chart-container {
+        height: 250px !important;
+    }
+
+    .table th, .table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .row {
+        flex-direction: column;
+    }
+
+    .col-lg-8, .col-lg-4, .col-md-6, .col-lg-3 {
+        width: 100%;
+    }
+
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .chart-container {
+        height: 200px !important;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .period-selector .btn-group {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .period-selector .btn {
+        flex: 1;
+        text-align: center;
+    }
+
+   堆叠图表
+    .chart-center-text h4 {
+        font-size: 1.2rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+}
+
 @media (max-width: 768px) {
     .dashboard-container {
         padding: 1rem;
@@ -363,6 +418,143 @@ body {
     
     .table th, .table td {
         padding: 0.75rem 1rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .stats-info h3 {
+        font-size: 1.2rem;
+    }
+
+    .stats-info p {
+        font-size: 0.75rem;
+    }
+
+    .table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody, .table tr {
+        display: block;
+    }
+
+    .table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border-bottom: 1px solid #dee2e6;
+        position: relative;
+        text-align: left;
+    }
+
+    .table td:before {
+        content: attr(data-title);
+        font-weight: bold;
+        min-width: 100px;
+        color: #000;
+    }
+
+    .product-image {
+        width: 40px;
+        height: 40px;
+    }
+
+    .btn-sales-report {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .chart-center-text h4 {
+        font-size: 1rem;
+    }
+
+    .chart-center-text small {
+        font-size: 0.7rem;
+    }
+
+    .legend-badge {
+        width: 10px;
+        height: 10px;
+    }
+
+    .status-badge {
+        font-size: 0.65rem;
+        padding: 0.4rem 0.7rem;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-container {
+        padding: 0.5rem;
+    }
+
+    .stats-card {
+        padding: 0.75rem;
+    }
+
+    .stats-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .stats-info h3 {
+        font-size: 1rem;
+    }
+
+    .stats-info p {
+        font-size: 0.7rem;
+    }
+
+    .table td {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+    }
+
+    .btn-sales-report {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .period-selector .btn {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .view-all-link {
+        font-size: 0.75rem;
+    }
+
+    .chart-container {
+        height: 150px !important;
+    }
+
+    .chart-center-text h4 {
+        font-size: 0.9rem;
+    }
+
+    .chart-center-text small {
+        font-size: 0.6rem;
+    }
+
+    .section-title {
+        font-size: 1rem;
+    }
+
+    .card-header h5 {
+        font-size: 1rem;
     }
 }
 </style>
@@ -458,13 +650,11 @@ body {
                 <div class="card-body">
                     <div class="chart-container" style="position: relative; height: 250px;">
                         <canvas id="orderStatusChart"></canvas>
-                        <!-- Center Text -->
                         <div class="chart-center-text">
                             <h4 class="m-0"><%= dashboardData.orderCount %></h4>
                             <small class="text-muted">Total Orders</small>
                         </div>
                     </div>
-                    <!-- Legend -->
                     <div class="chart-legend mt-3" id="orderStatusLegend"></div>
                 </div>
             </div>
@@ -478,31 +668,30 @@ body {
             <div class="card h-100">
                 <div class="card-header">
                     <h5 class="m-0">Top Selling Products</h5>
-                   
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr id="tableHeader">
-                                    <th class="ps-4">Product</th>
-                                    <th>Product Name</th>
-                                    <th>Category</th>
-                                    <th>Price</th>
-                                    <th>Sold</th>
+                                    <th class="ps-4" data-title="Product">Product</th>
+                                    <th data-title="Product Name">Product Name</th>
+                                    <th data-title="Category">Category</th>
+                                    <th data-title="Price">Price</th>
+                                    <th data-title="Sold">Sold</th>
                                 </tr>
                             </thead>
                             <tbody id="topSellingItemsTable">
                                 <% if (dashboardData.topProducts && dashboardData.topProducts.length > 0) { %>
                                     <% dashboardData.topProducts.forEach(product => { %>
                                         <tr>
-                                            <td class="ps-4">
+                                            <td class="ps-4" data-title="Product">
                                                 <img src="<%= product.image || 'https://via.placeholder.com/45' %>" class="product-image">
                                             </td>
-                                            <td class="fw-medium"><%= product.name %></td>
-                                            <td><%= product.category %></td>
-                                            <td>₹<%= product.price.toLocaleString() %></td>
-                                            <td><%= product.soldCount %></td>
+                                            <td class="fw-medium" data-title="Product Name"><%= product.name %></td>
+                                            <td data-title="Category"><%= product.category %></td>
+                                            <td data-title="Price">₹<%= product.price.toLocaleString() %></td>
+                                            <td data-title="Sold"><%= product.soldCount %></td>
                                         </tr>
                                     <% }); %>
                                 <% } else { %>
@@ -528,22 +717,22 @@ body {
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th class="ps-4">Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
+                                    <th class="ps-4" data-title="Order ID">Order ID</th>
+                                    <th data-title="Customer">Customer</th>
+                                    <th data-title="Amount">Amount</th>
+                                    <th data-title="Status">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <% if (dashboardData.recentOrders && dashboardData.recentOrders.length > 0) { %>
                                     <% dashboardData.recentOrders.forEach(order => { %>
                                         <tr>
-                                            <td class="ps-4">
+                                            <td class="ps-4" data-title="Order ID">
                                                 <a href="/admin/orders/<%= order._id %>" class="fw-medium text-decoration-none">#<%= order.orderId.slice(-6) %></a>
                                             </td>
-                                            <td><%= order.customerName %></td>
-                                            <td>₹<%= order.finalAmount.toLocaleString() %></td>
-                                            <td>
+                                            <td data-title="Customer"><%= order.customerName %></td>
+                                            <td data-title="Amount">₹<%= order.finalAmount.toLocaleString() %></td>
+                                            <td data-title="Status">
                                                 <% if (order.status === 'delivered') { %>
                                                     <span class="status-badge status-delivered">Delivered</span>
                                                 <% } else if (order.status === 'cancelled') { %>
@@ -578,20 +767,20 @@ body {
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th class="ps-4">Category</th>
-                                    <th>Products</th>
-                                    <th>Total Sales</th>
-                                    <th>Items Sold</th>
+                                    <th class="ps-4" data-title="Category">Category</th>
+                                    <th data-title="Products">Products</th>
+                                    <th data-title="Total Sales">Total Sales</th>
+                                    <th data-title="Items Sold">Items Sold</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <% if (dashboardData.topCategories && dashboardData.topCategories.length > 0) { %>
                                     <% dashboardData.topCategories.forEach(category => { %>
                                         <tr>
-                                            <td class="ps-4 fw-medium"><%= category.name %></td>
-                                            <td><%= category.productCount %></td>
-                                            <td>₹<%= category.totalSales.toLocaleString() %></td>
-                                            <td><%= category.soldCount %></td>
+                                            <td class="ps-4 fw-medium" data-title="Category"><%= category.name %></td>
+                                            <td data-title="Products"><%= category.productCount %></td>
+                                            <td data-title="Total Sales">₹<%= category.totalSales.toLocaleString() %></td>
+                                            <td data-title="Items Sold"><%= category.soldCount %></td>
                                         </tr>
                                     <% }); %>
                                 <% } else { %>
@@ -607,7 +796,6 @@ body {
         </div>
         
         <div class="col-lg-4">
-            
         </div>
     </div>
 </div>
