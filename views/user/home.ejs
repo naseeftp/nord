@@ -1,197 +1,169 @@
-<%-include("../../views/partials/user/header")%>
-  <section id="billboard" class="bg-light py-5">
-    <div class="container">
-      <div class="row justify-content-center">
-        <h1 class="section-title text-center mt-4" data-aos="fade-up">New Collections</h1>
-       
-      </div>
-      <div class="row">
-        <div class="swiper main-swiper py-4" data-aos="fade-up" data-aos-delay="600">
-          <div class="swiper-wrapper d-flex border-animation-left">
-            <div class="swiper-slide">
-              <div class="banner-item image-zoom-effect">
-                <div class="image-holder">
-                  <a href="#">
-                    <img src="images/banner-image-6.jpg" alt="product" class="img-fluid">
-                  </a>
-                </div>
-                <div class="banner-content py-4">
-                  <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Soft leather jackets</a>
-                  </h5>
-                  <div class="btn-left">
-                    <a href="#" class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="banner-item image-zoom-effect">
-                <div class="image-holder">
-                  <a href="#">
-                    <img src="images/banner-image-1.jpg" alt="product" class="img-fluid">
-                  </a>
-                </div>
-                <div class="banner-content py-4">
-                  <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Soft leather jackets</a>
-                  </h5>
-                  <div class="btn-left">
-                    <a href="#" class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="banner-item image-zoom-effect">
-                <div class="image-holder">
-                  <a href="#">
-                    <img src="images/banner-image-2.jpg" alt="product" class="img-fluid">
-                  </a>
-                </div>
-                <div class="banner-content py-4">
-                  <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Soft leather jackets</a>
-                  </h5>
-                  <div class="btn-left">
-                    <a href="#" class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="banner-item image-zoom-effect">
-                <div class="image-holder">
-                  <a href="#">
-                    <img src="images/banner-image-3.jpg" alt="product" class="img-fluid">
-                  </a>
-                </div>
-                <div class="banner-content py-4">
-                  <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Soft leather jackets</a>
-                  </h5>
-                  <div class="btn-left">
-                    <a href="#" class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="banner-item image-zoom-effect">
-                <div class="image-holder">
-                  <a href="#">
-                    <img src="images/banner-image-4.jpg" alt="product" class="img-fluid">
-                  </a>
-                </div>
-                <div class="banner-content py-4">
-                  <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Out crop sweater</a>
-                  </h5>
-                  <div class="btn-left">
-                    <a href="#" class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="banner-item image-zoom-effect">
-                <div class="image-holder">
-                  <a href="#">
-                    <img src="images/banner-image-5.jpg" alt="product" class="img-fluid">
-                  </a>
-                </div>
-                <div class="banner-content py-4">
-                  <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Soft leather jackets</a>
-                  </h5>
-                  <div class="btn-left">
-                    <a href="#" class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Discover Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-pagination"></div>
-        </div>
-        <div class="icon-arrow icon-arrow-left"><svg width="50" height="50" viewBox="0 0 24 24">
-            <use xlink:href="#arrow-left"></use>
-          </svg></div>
-        <div class="icon-arrow icon-arrow-right"><svg width="50" height="50" viewBox="0 0 24 24">
-            <use xlink:href="#arrow-right"></use>
-          </svg></div>
-      </div>
-    </div>
-  </section>
+<%- include("../../views/partials/user/header") %>
 
- 
+<style>
+  .products .card {
+    width: 8cm;
+    height: 8cm;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid white; /* Classic beige border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    margin: 0; /* Remove margin */
+  }
+  .products .card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+  }
+  .products .card-img-top {
+    height: 6cm;
+    object-fit: cover;
+    border-bottom: 1px solid #d3c1a5; /* Subtle separator */
+  }
+  .products .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background-color: white; /* Warm cream background for classic feel */
+    font-family: 'Georgia', serif; /* Classic serif font */
+  }
+  .products .card-title {
+    font-size: 1.1rem;
+    color: #4a3c2f; /* Dark brown for elegance */
+    margin-bottom: 0.25rem;
+    font-weight: bold;
+  }
+  .products .card-text {
+    font-size: 0.9rem;
+    color: #6b4e31; /* Medium brown for contrast */
+    margin-bottom: 0.5rem;
+  }
+  .products .btn-primary {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    background-color:black; /* Rich brown button */
+    border-color:black;
+    font-family: 'Georgia', serif;
+  }
+  .products .btn-primary:hover {
+    background-color:black; /* Darker shade on hover */
+    border-color: black;
+  }
+  .products .row {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to new row */
+    margin: 0; /* Remove row margin */
+    gap: 0; /* Remove gap between columns */
+  }
+  .products .col-12 {
+    padding: 0; /* Remove column padding */
+  }
+  .products .card-container {
+    display: flex;
+    justify-content: space-between; /* Evenly space five cards */
+    width: 100%;
+  }
+</style>
 
-
-
-
-
-  <section class="testimonials py-5 bg-light">
+<section class="products py-5">
+  <div class="container">
     <div class="section-header text-center mt-5">
-      <h3 class="section-title">WE LOVE GOOD COMPLIMENT</h3>
+      <h3 class="section-title">New collections</h3>
     </div>
-    <div class="swiper testimonial-swiper overflow-hidden my-5">
-      <div class="swiper-wrapper d-flex">
-        <div class="swiper-slide">
-          <div class="testimonial-item text-center">
-            <blockquote>
-              <p>“More than expected crazy soft, flexible and best fitted white simple denim shirt.”</p>
-              <div class="review-title text-uppercase">casual way</div>
-            </blockquote>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="testimonial-item text-center">
-            <blockquote>
-              <p>“Best fitted white denim shirt more than expected crazy soft, flexible</p>
-              <div class="review-title text-uppercase">uptop</div>
-            </blockquote>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="testimonial-item text-center">
-            <blockquote>
-              <p>“Best fitted white denim shirt more white denim than expected flexible crazy soft.”</p>
-              <div class="review-title text-uppercase">Denim craze</div>
-            </blockquote>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="testimonial-item text-center">
-            <blockquote>
-              <p>“Best fitted white denim shirt more than expected crazy soft, flexible</p>
-              <div class="review-title text-uppercase">uptop</div>
-            </blockquote>
-          </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card-container">
+          <% if (products && products.length > 0) { %>
+            <% products.slice(0, 5).forEach(product => { %>
+              <div class="card h-100 shadow-sm">
+                <img src="/Uploads/re-image/<%= product.productImage[0] %>" class="card-img-top" alt="<%= product.productName %>">
+                <div class="card-body text-center">
+                  <h5 class="card-title"><%= product.productName %></h5>
+                  <p class="card-text text-muted"><%= product.brand %></p>
+                  <p class="card-text">
+                    <% if (product.finalamount > 0) { %>
+                      <span class="text-success fw-bold">$<%= product.finalamount %></span>
+                      <span class="text-decoration-line-through text-muted">₹<%= product.regularPrice %></span>
+                    <% } else { %>
+                      <span class="text-success fw-bold">₹<%= product.salePrice %></span>
+                      <% if (product.regularPrice > product.salePrice) { %>
+                        <span class="text-decoration-line-through text-muted">₹<%= product.regularPrice %></span>
+                      <% } %>
+                    <% } %>
+                  </p>
+                  <a href="/productDetails?id=<%= product._id %>" class="btn btn-primary">View Details</a>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="col-12 text-center">
+              <p>No products available at the moment.</p>
+            </div>
+          <% } %>
         </div>
       </div>
     </div>
-    <div class="testimonial-swiper-pagination d-flex justify-content-center mb-5"></div>
-  </section>
+  </div>
+</section>
 
-
-
- 
-
-  <section class="logo-bar py-5 my-5">
-    <div class="container">
-      <div class="row">
-        <div class="logo-content d-flex flex-wrap justify-content-between">
-          <img src="images/logo1.png" alt="logo" class="logo-image img-fluid">
-          <img src="images/logo2.png" alt="logo" class="logo-image img-fluid">
-          <img src="images/logo3.png" alt="logo" class="logo-image img-fluid">
-          <img src="images/logo4.png" alt="logo" class="logo-image img-fluid">
-          <img src="images/logo5.png" alt="logo" class="logo-image img-fluid">
+<section class="testimonials py-5 bg-light">
+  <div class="section-header text-center mt-5">
+    <h3 class="section-title">WE LOVE GOOD COMPLIMENT</h3>
+  </div>
+  <div class="swiper testimonial-swiper overflow-hidden my-5">
+    <div class="swiper-wrapper d-flex">
+      <div class="swiper-slide">
+        <div class="testimonial-item text-center">
+          <blockquote>
+            <p>“More than expected crazy soft, flexible and best fitted white simple denim shirt.”</p>
+            <div class="review-title text-uppercase">casual way</div>
+          </blockquote>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="testimonial-item text-center">
+          <blockquote>
+            <p>“Best fitted white denim shirt more than expected crazy soft, flexible</p>
+            <div class="review-title text-uppercase">uptop</div>
+          </blockquote>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="testimonial-item text-center">
+          <blockquote>
+            <p>“Best fitted white denim shirt more white denim than expected flexible crazy soft.”</p>
+            <div class="review-title text-uppercase">Denim craze</div>
+          </blockquote>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="testimonial-item text-center">
+          <blockquote>
+            <p>“Best fitted white denim shirt more than expected crazy soft, flexible</p>
+            <div class="review-title text-uppercase">uptop</div>
+          </blockquote>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+  <div class="testimonial-swiper-pagination d-flex justify-content-center mb-5"></div>
+</section>
 
- 
+<section class="logo-bar py-5 my-5">
+  <div class="container">
+    <div class="row">
+      <div class="logo-content d-flex flex-wrap justify-content-between">
+        <img src="images/logo1.png" alt="logo" class="logo-image img-fluid">
+        <img src="images/logo2.png" alt="logo" class="logo-image img-fluid">
+        <img src="images/logo3.png" alt="logo" class="logo-image img-fluid">
+        <img src="images/logo4.png" alt="logo" class="logo-image img-fluid">
+        <img src="images/logo5.png" alt="logo" class="logo-image img-fluid">
+      </div>
+    </div>
+  </div>
+</section>
 
-  
-
- <%-include("../../views/partials/user/footer")%>
+<%- include("../../views/partials/user/footer") %>

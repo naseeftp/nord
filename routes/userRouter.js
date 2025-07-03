@@ -82,14 +82,14 @@ router.post("/editAddress",userAuth,profileController.postEditAddress);
 router.get("/deleteAddress",userAuth,profileController.deleteAddress);
 //wishlist
 router.get('/wishlist',userAuth,wishlistController.loadWishlist)
-router.post('/addToWishlist',userAuth,wishlistController.addToWishlist)
+router.post('/addTowishlist',wishlistController.addToWishlist)
 router.get('/removeFromWishlist',userAuth,wishlistController.removeProduct);
 router.get('/product-sizes/:productId', wishlistController.getProductSizes)
 
 
 //cartmangement
 router.get("/cart", userAuth, cartController.getCartPage)
-router.post("/addToCart",userAuth, cartController.addToCart)
+router.post("/addToCart", cartController.addToCart)
 router.post("/changeQuantity", userAuth,cartController.changeQuantity)
 router.get("/deleteItem", userAuth, cartController.deleteProduct)
 router.get('/product-sizes/:productId',userController.productSize)

@@ -58,10 +58,18 @@ try{
   if(user){
     userData=await User.findById(user).lean()
   }
+  const products=await Product.find({
+    isBlocked:false,
+    
+  })
+  .sort({createdAt:-1})
+  .limit(5)
+  .lean()
   res.render("home",{
     user:userData,
     wishlistCount,
-    cartCount
+    cartCount,
+    products
     
 
   })

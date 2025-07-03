@@ -44,35 +44,53 @@ const loadWishlist = async (req, res) => {
   }
 };
 
+
+
+
 const addToWishlist = async (req, res) => {
   try {
-    const { productId } = req.body;
     const userId = req.session.user;
-    const user = await User.findById(userId);
+    console.log(userId, 'user id');
 
+    if (!userId) {
+      return res.json({ success: false, message: "please login to add item to wishlist" });
+    }
+
+    const { productId } = req.body;
+    console.log(productId, 'prod id');
+
+    const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ status: false, message: "User not found" });
+      return res.json({ success: false, message: "User not found" });
     }
 
     if (user.wishlist.includes(productId)) {
-      return res.status(200).json({ status: false, message: "Product already in wishlist" });
+      return res.json({ success: false, message: "Product already in wishlist" });
     }
 
     user.wishlist.push(productId);
     await user.save();
+
     const cart = await Cart.findOne({ userId });
-    return res.status(200).json({ 
-      status: true,
-       message: "Product added to wishlist",
-       wishlistCount: user.wishlist.length,
-       cartCount: cart?.items?.length || 0
-      
-      });
+
+    return res.status(200).json({
+      success: true,
+      message: "Product added to wishlist",
+      wishlistCount: user.wishlist.length,
+      cartCount: cart?.items?.length || 0,
+    });
+
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ status: false, message: "Server error" });
+    console.error("Wishlist Add Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };
+
+
+
 
 const removeProduct = async (req, res) => {
   try {
