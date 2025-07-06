@@ -4,6 +4,8 @@ const GoogleStrategy=require("passport-google-oauth20").Strategy;
 const User=require("../models/userSchema");
 const env=require("dotenv").config();
 
+console.log("URI is ==> process.env.GOOGLE_CALLBACK_URI", process.env.GOOGLE_CALLBACK_URI)
+
 passport.use(new GoogleStrategy({
    clientID:process.env.GOOGLE_CLIENT_ID,
    clientSecret:process.env.GOOGLE_CLIENT_SECRET,
