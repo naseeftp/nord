@@ -9,7 +9,7 @@ console.log("URI is ==> process.env.GOOGLE_CALLBACK_URI", process.env.GOOGLE_CAL
 passport.use(new GoogleStrategy({
    clientID:process.env.GOOGLE_CLIENT_ID,
    clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-   callbackURL: process.env.GOOGLE_CALLBACK_URI,
+   callbackURL: "https://naseef.online/auth/google/callback",
    scope:['profile','email'],
    prompt: 'select-account'
 },
