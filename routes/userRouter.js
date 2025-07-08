@@ -11,21 +11,13 @@ const orderController = require("../controllers/user/orderController")
 const wishlistController=require("../controllers/user/wishlistController");
 const couponController=require('../controllers/user/couponController')
 const { Admin } = require("mongodb");
-
 const walletController=require('../controllers/user/walletController')
-
 //  invoice
 const Order = require('../models/orderSchema');
 const { generateInvoicePDF } =require("../controllers/user/orderController")
 const fs = require('fs');
 const User = require('../models/userSchema');
 const Cart= require('../models/cartSchema');
-
-
-
-
-
-
 router.get("/pageNotFound",userController.pageNotFound);
 router.get("/",userController.loadHomepage)
 router.get("/signup",userController.loadSignup)
@@ -60,11 +52,10 @@ router.post('/change-password',userAuth,profileController.changePasswordValid);
 router.post("/verify-changepassword-otp",userAuth,profileController.verifyChangePassOtp);
 router.get('/useraddress', userAuth,profileController.getAddress);
 router.get('/orders',userAuth,profileController.getOrders)
-
- router.get('/updatePassword',userAuth,profileController.getUpdatePassword)
- router.post('/updatePassword',userAuth,profileController.updatePassword)
- router.get('/editProfile',userAuth,profileController.getEditProfile)
- router.post('/editProfile',userAuth,profileController.updateProfile)
+router.get('/updatePassword',userAuth,profileController.getUpdatePassword)
+router.post('/updatePassword',userAuth,profileController.updatePassword)
+router.get('/editProfile',userAuth,profileController.getEditProfile)
+router.post('/editProfile',userAuth,profileController.updateProfile)
 
 router.get("/shop",userController.loadShoppingPage);
 router.get('/filter',userController.filterProduct);

@@ -95,7 +95,6 @@ router.get("/checkCouponName", async (req, res) => {
   router.get('/transactions',adminAuth,transactionController.getAllTransactions)
   router.get("/transactions/:transactionId", adminAuth,transactionController.getTransactionsDetails)
   router.get("/api/sales-data", adminAuth, adminController.getSalesData)
-  
   router.post('/handle-item-return',adminAuth,orderController.handleItemReturn)
 
 

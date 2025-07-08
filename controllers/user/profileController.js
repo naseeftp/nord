@@ -137,6 +137,9 @@ const verifyForgotPassOtp=async(req,res)=>{
 
 const getResetPassPage=async(req,res)=>{
     try {
+        const {wishlistCount,cartCount}=req.session.user?
+        await getUserCounts(req.session.user)
+        :{wishlistCount:0,cartCount:0}
 res.render("reset-password",{
     wishlistCount,
     cartCount 
@@ -345,10 +348,17 @@ try {
      const otp=generateOtp();
      const emailSent=await sendVerificationEmail(email,otp);
      if(emailSent){
+     const userId=req.session.userId;
+     const wishlistCount=userId? await Wishlist.countDocuments({user:userId}):0
+     const cartCount=userId? await Cart.countDocuments({user:userId}):0; 
+    
      req.session.userOtp=otp;
      req.session.userData=req.body;
      req.session.email= email;
-     res.render("change-email-otp");
+     res.render("change-email-otp",{
+        wishlistCount:wishlistCount,
+        cartCount:cartCount,
+     });
      console.log("email sent:",email,);
      console.log("your otp:",otp)
         
@@ -372,11 +382,17 @@ try {
 const verifyEmailOtp=async(req,res)=>{
 try {
     const enteredOtp=req.body.otp;
+    
     if(enteredOtp===req.session.userOtp){
         req.session.userData=req.body.userData;
+        const userId=req.session.userId
+        const wishlistCount=userId? await Wishlist.countDocuments({user:userId}):0
+        const cartCount=userId? await Cart.countDocuments({user:userId}):0; 
         res.render("new-email",{
         userData:req.session.userData,
-            message: null
+        message: null,
+        wishlistCount:wishlistCount,
+        cartCount:cartCount,
         }, )
     }
     else{
