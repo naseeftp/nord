@@ -10,23 +10,23 @@ body {
 }
 
 .container {
-    max-width: 1000px; /* Reduced container width */
+    max-width: 900px;
     margin: 0 auto;
-    padding: 15px;
+    padding: 10px;
 }
 
 /* Breadcrumb Navigation */
 .page-header {
     background-color: transparent;
-    padding: 15px 0;
-    border-bottom: 1px solid #eaeaea;
-    margin-bottom: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 15px;
 }
 
 .breadcrumb {
     display: flex;
     align-items: center;
-    font-size: 13px;
+    font-size: 12px;
     color: #666;
 }
 
@@ -38,13 +38,13 @@ body {
 }
 
 .breadcrumb a:hover {
-    color: #000; /* Changed from #ff3f6c to black */
+    color: #000;
 }
 
 .breadcrumb-separator {
-    margin: 0 12px;
+    margin: 0 8px;
     color: #ccc;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .breadcrumb-current {
@@ -52,30 +52,36 @@ body {
     font-weight: 400;
 }
 
-/* Product Detail Section */
+/* Main Layout */
+.main-content {
+    display: flex;
+    gap: 20px; /* Space between main product and similar products */
+}
+
+/* Product Detail Section (Left) */
 .product-detail {
+    flex: 1; /* Takes available space on left */
     background-color: white;
-    border-radius: 8px; /* Reduced radius */
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 15px;
 }
 
 /* Image Gallery */
 .detail-gallery {
     position: relative;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .product-image-container {
     position: relative;
     display: inline-block;
     overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
     width: 100%;
-    max-width: 350px; /* Reduced image size */
+    max-width: 250px;
     margin: 0 auto;
 }
 
@@ -84,86 +90,86 @@ body {
     height: auto;
     object-fit: cover;
     border-radius: 6px;
-    transition: transform 0.4s ease;
+    transition: transform 0.3s ease;
 }
 
 .product-image-container:hover img {
-    transform: scale(1.02);
+    transform: scale(1.03);
 }
 
 /* Magnifier Lens */
 .magnifier {
     position: absolute;
-    width: 120px; /* Reduced size */
-    height: 120px; /* Reduced size */
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    border: 2px solid rgba(0, 0, 0, 0.5); /* Changed from rose to black */
+    border: 2px solid rgba(0, 0, 0, 0.4);
     background-repeat: no-repeat;
-    background-size: 700px 700px;
+    background-size: 500px 500px;
     display: none;
     pointer-events: none;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 100;
 }
 
 /* Thumbnails */
 .slider-nav-thumbnails {
     display: flex;
-    gap: 10px;
+    gap: 6px;
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 8px;
     flex-wrap: wrap;
 }
 
 .slider-nav-thumbnails img {
-    width: 60px; /* Reduced thumbnail size */
-    height: 60px; /* Reduced thumbnail size */
-    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
     cursor: pointer;
     border: 2px solid transparent;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     object-fit: cover;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .slider-nav-thumbnails img:hover {
-    border-color: #000; /* Changed from #ff3f6c to black */
-    transform: translateY(-2px);
+    border-color: #000;
+    transform: translateY(-1px);
 }
 
 .slider-nav-thumbnails img.active {
-    border-color: #000; /* Changed from #ff3f6c to black */
+    border-color: #000;
 }
 
 /* Product Info */
 .detail-info {
-    padding: 5px 10px;
+    padding: 5px 8px;
 }
 
 .product-title {
-    font-size: 24px; /* Reduced size */
+    font-size: 20px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     color: #222;
-    line-height: 1.2;
+    line-height: 1.3;
 }
 
 .product-offer {
     display: inline-block;
-    background-color: #000; /* Changed from #ff3f6c to black */
+    background-color: #000;
     color: white;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 13px;
+    padding: 3px 8px;
+    border-radius: 16px;
+    font-size: 12px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .product-price {
-    font-size: 22px; /* Reduced size */
+    font-size: 18px;
     font-weight: 700;
     color: #111;
-    margin: 12px 0;
+    margin: 10px 0;
 }
 
 .product-price ins {
@@ -171,76 +177,75 @@ body {
 }
 
 .product-price .text-brand {
-    color: #000; /* Changed from #ff3f6c to black */
+    color: #000;
 }
 
 .product-price .original-price {
     text-decoration: line-through;
     color: #999;
-    font-size: 16px; /* Reduced size */
-    margin-left: 8px;
+    font-size: 14px;
+    margin-left: 6px;
 }
 
 .product-description {
     color: #666;
-    line-height: 1.5;
-    margin-bottom: 15px;
-    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+    font-size: 13px;
 }
 
-/* Size Selector - Redesigned */
+/* Size Selector */
 .size-selector {
-    margin: 20px 0;
-    padding: 15px;
+    margin: 15px 0;
+    padding: 12px;
     background-color: #f5f5f5;
     border: 1px solid #eee;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .size-selector p {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     color: #333;
     border-bottom: 1px solid #eee;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
 }
 
-/* New design for size options - more compact */
 .size-option {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border: 1px solid #eaeaea;
-    border-radius: 6px;
+    border-radius: 5px;
     background-color: white;
-    margin-bottom: 8px;
-    transition: all 0.25s ease;
+    margin-bottom: 6px;
+    transition: all 0.2s ease;
 }
 
 .size-option:hover {
-    border-color: #000; /* Changed from #ff3f6c to black */
-    transform: translateX(3px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border-color: #000;
+    transform: translateX(2px);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .size-option label {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: 13px;
     color: #333;
     cursor: pointer;
     flex-grow: 1;
 }
 
 .size-option input {
-    margin-right: 10px;
+    margin-right: 8px;
     cursor: pointer;
-    accent-color: #000; /* Changed from #ff3f6c to black */
-    width: 16px;
-    height: 16px;
+    accent-color: #000;
+    width: 14px;
+    height: 14px;
 }
 
 .size-option span {
@@ -251,40 +256,40 @@ body {
 .availability-tag {
     background-color: #f0f0f0;
     color: #333;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
     font-weight: 500;
 }
 
 /* Buttons */
 .button-add-to-cart {
-    background-color: #000 !important; /* Changed from #ff3f6c to black */
+    background-color: #000 !important;
     color: white !important;
     border: none;
-    border-radius: 6px;
-    padding: 12px 24px;
-    font-size: 15px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-right: 15px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    margin-right: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .button-add-to-cart:hover {
-    background-color: #333 !important; /* Changed from #e63056 to dark gray */
-    transform: translateY(-2px);
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+    background-color: #333 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .button-wishlist {
     background-color: white !important;
-    color: #000 !important; /* Changed from #ff3f6c to black */
-    border: 2px solid #000 !important; /* Changed from #ff3f6c to black */
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-size: 15px;
+    color: #000 !important;
+    border: 2px solid #000 !important;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -294,29 +299,156 @@ body {
 }
 
 .button-wishlist:hover {
-    background-color: #f5f5f5 !important; /* Changed from #fff5f7 */
-    transform: translateY(-2px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    background-color: #f5f5f5 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .button-wishlist i {
-    margin-right: 8px;
+    margin-right: 6px;
+}
+
+/* Similar Products Section (Right) */
+.similar-products {
+    width: 280px; /* Increased width for larger container */
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+}
+
+.similar-products h3 {
+    font-size: 18px; /* Slightly larger font */
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #222;
+    text-align: center;
+}
+
+.similar-products-grid {
+    display: flex;
+    flex-direction: column; /* Stack vertically */
+    gap: 12px; /* Slightly larger gap */
+}
+
+.similar-product-card {
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.similar-product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.similar-product-image {
+    width: 100%;
+    height: 120px; /* Increased height */
+    object-fit: cover;
+}
+
+.similar-product-info {
+    padding: 10px; /* Increased padding */
+    text-align: center;
+}
+
+.similar-product-info h4 {
+    font-size: 14px; /* Larger font */
+    margin: 0 0 8px;
+    color: #222;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.similar-product-info .button-view {
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px; /* Slightly larger padding */
+    font-size: 12px; /* Larger font */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.similar-product-info .button-view:hover {
+    background-color: #333;
+    transform: translateY(-1px);
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
-    .product-detail {
-        padding: 15px 10px;
+    .container {
+        padding: 8px;
     }
-    
+
+    .main-content {
+        flex-direction: column; /* Stack vertically on mobile */
+        gap: 15px;
+    }
+
+    .product-detail {
+        padding: 10px;
+    }
+
+    .similar-products {
+        width: 100%; /* Full width on mobile */
+    }
+
     .product-title {
-        font-size: 20px;
+        font-size: 18px;
     }
     
     .button-add-to-cart,
     .button-wishlist {
         width: 100%;
-        margin: 6px 0;
+        margin: 5px 0;
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .product-image-container {
+        max-width: 200px;
+    }
+
+    .slider-nav-thumbnails img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .magnifier {
+        width: 60px;
+        height: 60px;
+        background-size: 400px 400px;
+    }
+
+    .similar-products-grid {
+        flex-direction: row; /* Horizontal scroll on mobile */
+        overflow-x: auto;
+        gap: 10px;
+    }
+
+    .similar-product-card {
+        min-width: 140px; /* Adjusted for larger mobile cards */
+    }
+
+    .similar-product-image {
+        height: 100px; /* Slightly larger for mobile */
+    }
+
+    .similar-product-info h4 {
+        font-size: 13px;
+    }
+
+    .similar-product-info .button-view {
+        padding: 5px 10px;
+        font-size: 11px;
     }
 }
 </style>
@@ -335,83 +467,99 @@ body {
         </div>
     </div>
 
-    <!-- Product Detail Section -->
-    <section class="mt-50 mb-50">
+    <!-- Main Content -->
+    <section class="mt-30 mb-30">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="product-detail">
-                        <div class="row">
-                            <!-- Product Images Gallery -->
-                            <div class="col-md-6">
-                                <div class="detail-gallery">
-                                    <div class="product-image-container" id="product-image-container">
-                                        <img id="main-product-image" src="/uploads/re-image/<%= product.productImage[0] %>" alt="<%= product.productName %>">
-                                        <div id="magnifier" class="magnifier"></div>
-                                    </div>
-                                    <div class="slider-nav-thumbnails">
-                                        <% for (let i = 0; i < product.productImage.length; i++) { %>
-                                            <img class="thumbnail <%= i === 0 ? 'active' : '' %>" 
-                                                 src="/uploads/re-image/<%= product.productImage[i] %>" 
-                                                 alt="<%= product.productName %> - view <%= i+1 %>" 
-                                                 data-src="/uploads/re-image/<%= product.productImage[i] %>">
-                                        <% } %>
-                                    </div>
+            <div class="main-content">
+                <!-- Product Detail Section (Left) -->
+                <div class="product-detail">
+                    <div class="row align-items-start">
+                        <!-- Product Images Gallery -->
+                        <div class="col-12">
+                            <div class="detail-gallery">
+                                <div class="product-image-container" id="product-image-container">
+                                    <img id="main-product-image" src="/Uploads/re-image/<%= product.productImage[0] %>" alt="<%= product.productName %>">
+                                    <div id="magnifier" class="magnifier"></div>
+                                </div>
+                                <div class="slider-nav-thumbnails">
+                                    <% for (let i = 0; i < product.productImage.length; i++) { %>
+                                        <img class="thumbnail <%= i === 0 ? 'active' : '' %>" 
+                                             src="/Uploads/re-image/<%= product.productImage[i] %>" 
+                                             alt="<%= product.productName %> - view <%= i+1 %>" 
+                                             data-src="/Uploads/re-image/<%= product.productImage[i] %>">
+                                    <% } %>
                                 </div>
                             </div>
-
-                            <!-- Product Information -->
-                            <div class="col-md-6">
-                                <div class="detail-info">
-                                    <h2 class="product-title"><%= product.productName %></h2>
-                                    
-                                    <% if (product.productOffer > 0) { %>
-                                        <span class="product-offer"><%= product.productOffer %>% OFF</span>
+                        </div>
+                        <!-- Product Information -->
+                        <div class="col-12">
+                            <div class="detail-info">
+                                <h2 class="product-title"><%= product.productName %></h2>
+                                
+                                <% if (product.productOffer > 0) { %>
+                                    <span class="product-offer"><%= product.productOffer %>% OFF</span>
+                                <% } %>
+                                
+                                <div class="product-price">
+                                    <ins><span class="text-brand">₹<%= product.salePrice.toLocaleString('en-IN') %></span></ins>
+                                    <% if (product.regularPrice && product.regularPrice > product.salePrice) { %>
+                                        <span class="original-price">₹<%= product.regularPrice.toLocaleString('en-IN') %></span>
                                     <% } %>
-                                    
-                                    <div class="product-price">
-                                        <ins><span class="text-brand">₹<%= product.salePrice.toLocaleString('en-IN') %></span></ins>
-                                        <% if (product.regularPrice && product.regularPrice > product.salePrice) { %>
-                                            <span class="original-price">₹<%= product.regularPrice.toLocaleString('en-IN') %></span>
-                                        <% } %>
-                                    </div>
-                                    
-                                    <p class="product-description"><%= product.description %></p>
+                                </div>
+                                
+                                <p class="product-description"><%= product.description %></p>
 
-                                    <!-- Size & Quantity Selector -->
-                                    <div class="size-selector">
-                                        <p>Select Size & Quantity</p>
-                                        <% if (sizes && sizes.length > 0) { %>
-                                            <% sizes.forEach(size => { %>
-                                                <div class="size-option">
-                                                    <label>
-                                                        <input type="radio" name="size-<%= product._id %>" value="<%= size.size %>">
-                                                        <span><%= size.size.toUpperCase() %></span>
-                                                    </label>
-                                                    <span class="availability-tag">Available: <%= size.quantity %></span>
-                                                </div>
-                                            <% }) %>
-                                        <% } else { %>
-                                            <div class="no-sizes">
-                                                <p>No sizes available for this product.</p>
+                                <!-- Size & Quantity Selector -->
+                                <div class="size-selector">
+                                    <p>Select Size & Quantity</p>
+                                    <% if (sizes && sizes.length > 0) { %>
+                                        <% sizes.forEach(size => { %>
+                                            <div class="size-option">
+                                                <label>
+                                                    <input type="radio" name="size-<%= product._id %>" value="<%= size.size %>">
+                                                    <span><%= size.size.toUpperCase() %></span>
+                                                </label>
+                                                <span class="availability-tag">Available: <%= size.quantity %></span>
                                             </div>
-                                        <% } %>
-                                    </div>
-                                    
-                                    <!-- Action Buttons -->
-                                    <div class="product-actions">
-                                        <button class="button-add-to-cart" onclick="addToCart('<%= product._id %>')">
-                                            Add to Cart
-                                        </button>
-                                        <button class="button-wishlist" onclick="addToWishList('<%= product._id %>')">
-                                            <i class="fi-rs-heart"></i> Add to Wishlist
-                                        </button>
-                                    </div>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <div class="no-sizes">
+                                            <p>No sizes available for this product.</p>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="product-actions">
+                                    <button class="button-add-to-cart" onclick="addToCart('<%= product._id %>')">
+                                        Add to Cart
+                                    </button>
+                                    <button class="button-wishlist" onclick="addToWishList('<%= product._id %>')">
+                                        <i class="fi-rs-heart"></i> Add to Wishlist
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Similar Products Section (Right) -->
+                <% if (similarProduct && similarProduct.length > 0) { %>
+                    <div class="similar-products">
+                        <h3>Similar Products</h3>
+                        <div class="similar-products-grid">
+                            <% similarProduct.forEach(similar => { %>
+                                <div class="similar-product-card">
+                                    <img class="similar-product-image" src="/Uploads/re-image/<%= similar.productImage[0] %>" alt="<%= similar.productName %>">
+                                    <div class="similar-product-info">
+                                        <h4><%= similar.productName %></h4>
+                                        <a href="/productdetails?id=<%= similar._id %>" class="button-view">View</a>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                <% } %>
             </div>
         </div>
     </section>
@@ -428,10 +576,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const mouseX = e.clientX - left;
         const mouseY = e.clientY - top;
 
-
         magnifier.style.display = "block";
-        magnifier.style.left = `${mouseX - 75}px`;
-        magnifier.style.top = `${mouseY - 75}px`;
+        magnifier.style.left = `${mouseX - 40}px`;
+        magnifier.style.top = `${mouseY - 40}px`;
 
         const backgroundPosX = (mouseX / width) * 100;
         const backgroundPosY = (mouseY / height) * 100;
@@ -442,29 +589,29 @@ document.addEventListener("DOMContentLoaded", function () {
         magnifier.style.display = "none";
     });
 
- 
     function updateMagnifierImage(imageSrc) {
         magnifier.style.backgroundImage = `url('${imageSrc}')`;
     }
 
     updateMagnifierImage(productImage.src);
 
-  
     document.querySelectorAll(".thumbnail").forEach(thumbnail => {
         thumbnail.addEventListener("click", function () {
             const newImageSrc = this.getAttribute("data-src");
             productImage.src = newImageSrc;
             updateMagnifierImage(newImageSrc);
+
+            document.querySelectorAll(".thumbnail").forEach(thumb => thumb.classList.remove("active"));
+            this.classList.add("active");
         });
     });
 });
 </script>
 
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // Function to update navigation counts
+   
     function updateNavCounts() {
       $.ajax({
         url: '/getNavCounts',
@@ -481,12 +628,12 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
     
-    // Initialize counts on page load
+   
     $(document).ready(function() {
       updateNavCounts();
     });
     
-    // Add to Cart function
+  
     function addToCart(productId) {
       const selectedSize = document.querySelector(`input[name="size-${productId}"]:checked`);
     
@@ -509,7 +656,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         success: function(response) {
           if (response.status === true) {
-            // Update cart count
+        
             $('#cartCount').text(response.cartLength || response.cartCount);
             if (response.wishlistCount !== undefined) {
               $('#wishlistCount').text(response.wishlistCount);
@@ -543,7 +690,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
     
-    // Add to Wishlist function
+   
     function addToWishList(productId) {
       $.ajax({
         url: '/addTowishlist',
@@ -551,7 +698,7 @@ document.addEventListener("DOMContentLoaded", function () {
         data: { productId: productId },
         success: function(response) {
           if (response.status) {
-            // Update wishlist count
+          
             $('#wishlistCount').text(response.wishlistCount);
             if (response.cartCount !== undefined) {
               $('#cartCount').text(response.cartCount);
@@ -585,54 +732,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     }
-    
-    // Existing image gallery and magnifier script (unchanged)
-    document.addEventListener("DOMContentLoaded", function () {
-      const productImage = document.getElementById("main-product-image");
-      const magnifier = document.getElementById("magnifier");
-      const productImageContainer = document.getElementById("product-image-container");
-    
-      productImageContainer.addEventListener("mousemove", function (e) {
-        const { left, top, width, height } = productImageContainer.getBoundingClientRect();
-        const mouseX = e.clientX - left;
-        const mouseY = e.clientY - top;
-    
-        magnifier.style.display = "block";
-        magnifier.style.left = `${mouseX - 75}px`;
-        magnifier.style.top = `${mouseY - 75}px`;
-    
-        const backgroundPosX = (mouseX / width) * 100;
-        const backgroundPosY = (mouseY / height) * 100;
-        magnifier.style.backgroundPosition = `${backgroundPosX}% ${backgroundPosY}%`;
-      });
-    
-      productImageContainer.addEventListener("mouseleave", function () {
-        magnifier.style.display = "none";
-      });
-    
-      function updateMagnifierImage(imageSrc) {
-        magnifier.style.backgroundImage = `url('${imageSrc}')`;
-      }
-    
-      updateMagnifierImage(productImage.src);
-    
-      document.querySelectorAll(".thumbnail").forEach(thumbnail => {
-        thumbnail.addEventListener("click", function () {
-          const newImageSrc = this.getAttribute("data-src");
-          productImage.src = newImageSrc;
-          updateMagnifierImage(newImageSrc);
-    
-          document.querySelectorAll(".thumbnail").forEach(thumb => thumb.classList.remove("active"));
-          this.classList.add("active");
-        });
-      });
-    });
-    </script>
-
+</script>
 
 <%- include("../../views/partials/user/footer") %>
-
-
-
-
-

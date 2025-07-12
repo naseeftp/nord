@@ -144,7 +144,7 @@ const signup = async (req, res) => {
     if (!passwordPattern.test(password)) {
       return res.render("signup", {
         message:
-          "Password must contain at least one uppercase letter and one special character",
+          "password should contain an uppercase and special character",  
       });
     }
 

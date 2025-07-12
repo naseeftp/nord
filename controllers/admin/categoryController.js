@@ -1,23 +1,30 @@
 const Category=require("../../models/categorySchema")
 
-
-
 const categoryInfo=async (req,res)=>{
 try {
     const page=parseInt(req.query.page)||1;
     const limit=4;
     const skip=(page-1)*limit;
-    const categoryData=await Category.find({})
+    const search=req.query.search|| '';
+    let query={};
+    if(search)
+    {
+      query.name={$regex:search,$options:'i'};
+    }
+    
+
+    const categoryData=await Category.find(query)
     .sort({createdAt:-1})
     .skip(skip)
     .limit(limit)
-    const totalCategories=await Category.countDocuments();
+    const totalCategories=await Category.countDocuments(query);
     const totalPages=Math.ceil(totalCategories/limit);
     res.render("category",{
         cat:categoryData,
         currentPage:page,
         totalPages:totalPages,
-        totalCategories:totalCategories
+        totalCategories:totalCategories,
+        search:search
     })
 } catch (error) {
     console.error(error);

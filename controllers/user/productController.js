@@ -58,8 +58,16 @@ const productDetails = async (req, res) => {
     const categoryOffer = findCategory?.categoryoffer || 0;
     const productOffer = product.productOffer || 0;
     const totalOffer = categoryOffer + productOffer;
+    const similarProduct=await Product.find({
+    category:findCategory._id,
+    _id:{$ne:product._id},
+    isBlocked:false,
 
-    // Calculate counts
+    }).limit(4)
+     console.log("similar Product------>",similarProduct)
+
+
+ 
     const wishlistCount = userData?.wishlist?.length || 0;
     const cartCount = cart?.items?.length || 0;
 
@@ -69,7 +77,7 @@ const productDetails = async (req, res) => {
       sizes: product.sizes,
       totalOffer: totalOffer,
       category: findCategory,
-      // Add these counts
+      similarProduct:similarProduct,
       wishlistCount,
       cartCount
     });

@@ -86,11 +86,10 @@ const forgotEmailValid = async (req, res) => {
         const email = req.body.email;
         const findUser = await User.findOne({ email: email });
 
-        if (!findUser) {
-            return res.render("forgot-password", {
+       if (!findUser) {
+            return res.json({
+                success: false,
                 message: "User with this email doesn't exist",
-                wishlistCount,
-                cartCount
             });
         }
 
@@ -100,23 +99,22 @@ const forgotEmailValid = async (req, res) => {
         if (emailSent) {
             req.session.userOtp = otp;
             req.session.email = email;
-            res.render("forgotPass-otp", {
-                message: "", 
-                wishlistCount,
-                cartCount
+            return res.json({
+                success: true,
+                redirectUrl: "/forgotPass-otp",
             });
-            console.log("OTP:", otp);
         } else {
-            res.render("forgot-password", {
+            return res.json({
+                success: false,
                 message: "Failed to send OTP. Please try again.",
-                wishlistCount,
-                cartCount
-
             });
         }
     } catch (error) {
         console.error("Error in forgotEmailValid:", error);
-        res.redirect("/pageNotFound");
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred. Please try again.",
+        });
     }
 };
 const verifyForgotPassOtp=async(req,res)=>{

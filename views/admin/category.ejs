@@ -320,12 +320,21 @@
         <h2 class="content-title card-title">Category</h2>
       </div>
     </div>
-    
     <div class="search-container">
-      <form action="/admin/category/" method="get" class="d-inline w-100">
+      <form action="/admin/category" method="get" class="d-inline w-100">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search categories" name="search"/>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search categories"
+            name="search"
+            id="searchInput"
+            value="<%= search || '' %>"
+          />
           <button class="btn" type="submit">Search</button>
+          <% if (search) { %>
+            <a href="/admin/category" class="btn btn-secondary">Clear</a>
+          <% } %>
         </div>
       </form>
     </div>
@@ -427,17 +436,17 @@
     
     <div class="pagination-container">
       <% if (currentPage > 1) { %>
-      <a href="?page=<%= currentPage - 1 %>">&laquo; Previous</a>
-      <% } %> 
-      <% for (let i = 1; i <= totalPages; i++) { %> 
+      <a href="?page=<%= currentPage - 1 %>&search=<%= encodeURIComponent(search) %>">« Previous</a>
+      <% } %>
+      <% for (let i = 1; i <= totalPages; i++) { %>
         <% if (i === currentPage) { %>
           <span class="current-page"><%= i %></span>
         <% } else { %>
-          <a href="?page=<%= i %>"><%= i %></a>
-        <% } %> 
-      <% } %> 
+          <a href="?page=<%= i %>&search=<%= encodeURIComponent(search) %>"><%= i %></a>
+        <% } %>
+      <% } %>
       <% if (currentPage < totalPages) { %>
-        <a href="?page=<%= currentPage + 1 %>">Next &raquo;</a>
+        <a href="?page=<%= currentPage + 1 %>&search=<%= encodeURIComponent(search) %>">Next »</a>
       <% } %>
     </div>
   </section>
