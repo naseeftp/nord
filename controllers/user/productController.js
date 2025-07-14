@@ -6,38 +6,6 @@ const Cart=require("../../models/cartSchema")
 
 
 
-// const productDetails=async(req,res)=>{
-//   try {
-
-//     const  productId=req.query.id;
-//     const userId=req.session.user;
-//     const userData=await User.findById(userId);
-//      const product = await Product.findById(productId).populate('category');
-//     const findCategory=Product.category;
-//     const  categoryOffer=findCategory?.categoryoffer||0;
-//     const productOffer=product.productOffer||0;
-//     const totalOffer=categoryOffer+productOffer;
-     
-//    if(!product||product.isBlocked){
-//    return res.render("page-404")
-
-//    }
-
-//     res.render("productdetails",{
-//     user:userData,
-//     product:product,
-//     sizes:product.sizes,
-//     totalOffer:totalOffer,
-//     category:findCategory,
-
-
-//     })
-// } catch (error) {
-//     console.log('error for fetching data', error);
-//     res.redirect('/pageNotFound')
-//   }
-
-// }
 const productDetails = async (req, res) => {
   try {
     const productId = req.query.id;

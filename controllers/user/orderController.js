@@ -38,6 +38,7 @@ const DELIVERY_CHARGE =50;
 
 const createOrder = async (req, res) => {
     const { amount, currency } = req.body
+    const discount=req.session.offerPrice||0
     
     try {
         if (!amount || isNaN(amount) || Number(amount) <= 0) {
@@ -45,7 +46,7 @@ const createOrder = async (req, res) => {
         }
         
         const options = {
-            amount: Math.round(Number(amount) * 100), 
+            amount:Math.round((Number(amount)-discount)*100),
             currency: currency || "INR",
             payment_capture: 1,
         }
