@@ -32,10 +32,7 @@ const productDetails = async (req, res) => {
     isBlocked:false,
 
     }).limit(4)
-     console.log("similar Product------>",similarProduct)
-
-
- 
+     
     const wishlistCount = userData?.wishlist?.length || 0;
     const cartCount = cart?.items?.length || 0;
 
