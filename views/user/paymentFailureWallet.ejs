@@ -1,0 +1,172 @@
+<!-- payment-failure.ejs -->
+<style>
+    :root {
+      --primary-color: #4a6cf7;
+      --danger-color: #dc3545;
+      --border-radius: 8px;
+      --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    body {
+      background-color: #f5f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+  
+    .failure-card {
+      background-color: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+      text-align: center;
+    }
+  
+    .failure-card h2 {
+      color: var(--danger-color);
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+  
+    .failure-card p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+  
+    .retry-button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px 25px;
+      border-radius: var(--border-radius);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+  
+    .retry-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  
+    .retry-button svg {
+      width: 18px;
+      height: 18px;
+    }
+  
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      font-size: 1.5rem;
+      color: var(--primary-color);
+    }
+  </style>
+  
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay">Verifying payment, please wait...</div>
+  
+  <main class="main">
+    <div class="container">
+      <div class="failure-card">
+        <h2>Payment Failed</h2>
+        <p>Sorry, your attempt to add ₹<%= failedAmount %> to your wallet was unsuccessful. Please try again.</p>
+        <button class="retry-button" id="retryButton">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+            <path
+              d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
+            <path fill-rule="evenodd"
+              d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" />
+          </svg>
+          Retry Payment
+        </button>
+      </div>
+    </div>
+  </main>
+  
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById('retryButton').addEventListener('click', async () => {
+      const amount = "<%= failedAmount %>";
+      try {
+        const response = await fetch('/wallet/create-razorpay-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ amount }),
+        });
+  
+        const data = await response.json();
+  
+        if (!data.success) throw new Error(data.message);
+  
+        const options = {
+          key: data.key_id,
+          amount: data.amount,
+          currency: 'INR',
+          name: 'Wallet Recharge',
+          description: 'Add money to wallet',
+          order_id: data.order_id,
+          handler: async function (response) {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+  
+            try {
+              const verifyResponse = await fetch('/wallet/verify-payment', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(response),
+              });
+  
+              const verifyData = await verifyResponse.json();
+  
+              if (verifyData.success) {
+                window.location.href = `/wallet/payment-success?amount=${amount}`;
+              } else {
+                window.location.href = `/wallet/payment-failure?amount=${amount}`;
+              }
+            } catch (error) {
+              console.error('Error:', error);
+              window.location.href = `/wallet/payment-failure?amount=${amount}`;
+            }
+          },
+          prefill: {
+            name: '<%= user.name %>',
+            email: '<%= user.email %>',
+          },
+          theme: {
+            color: '#4a5568',
+          },
+        };
+  
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function () {
+          window.location.href = `/wallet/payment-failure?amount=${amount}`;
+        });
+  
+        rzp.open();
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to initiate payment. Please try again.');
+      }
+    });
+  </script>
+  

@@ -459,8 +459,194 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="/js/wallet.js"></script>
-
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+      async function updateWalletData() {
+          try {
+              const response = await fetch('/wallet/get-data', {
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+              });
+  
+              const result = await response.json();
+              if (result.success) {
+                  document.getElementById('availableBalance').textContent = result.balance.toFixed(2);
+  
+                  const tbody = document.querySelector('.transaction-table tbody');
+                  tbody.innerHTML = '';
+  
+                  if (result.transactions.length > 0) {
+                      result.transactions.forEach(transaction => {
+                          const row = document.createElement('tr');
+                          row.innerHTML = `
+                              <td>₹${transaction.amount.toFixed(2)}</td>
+                              <td>${transaction.transactionPurpose}</td>
+                              <td>${new Date(transaction.createdAt).toLocaleDateString()}</td>
+                              <td>
+                                  ${transaction.transactionType === 'credit' ?
+                                      '<span style="color: green;">Credit</span>' :
+                                      '<span style="color: red;">Debit</span>'}
+                              </td>
+                          `;
+                          tbody.appendChild(row);
+                      });
+                  } else {
+                      tbody.innerHTML = '<tr class="empty-transactions"><td colspan="4">No transactions found</td></tr>';
+                  }
+              } else {
+                  console.error('Failed to fetch wallet data:', result.message);
+              }
+          } catch (error) {
+              console.error('Error fetching wallet data:', error);
+          }
+      }
+  
+      async function updateWalletBalance() {
+          try {
+              const response = await fetch('/wallet/get-balance', {
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+              });
+  
+              const result = await response.json();
+              if (result.success) {
+                  document.getElementById('availableBalance').textContent = result.balance.toFixed(2);
+              } else {
+                  console.error('Failed to fetch wallet balance:', result.message);
+              }
+          } catch (error) {
+              console.error('Error fetching wallet balance:', error);
+          }
+      }
+  
+      updateWalletData();
+      updateWalletBalance();
+  
+      window.addEventListener('focus', () => {
+          updateWalletData();
+          updateWalletBalance();
+      });
+  });
+  
+  function setAmount(amount) {
+      document.getElementById('amount').value = amount;
+  }
+  
+  document.getElementById('payButton').addEventListener('click', async () => {
+      const amount = document.getElementById('amount').value;
+      
+      if (!amount || amount < 1) {
+          alert('Please enter a valid amount');
+          return;
+      }
+  
+      try {
+          const response = await fetch('/wallet/create-razorpay-order', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ amount })
+          });
+  
+          const data = await response.json();
+          
+          if (!data.success) {
+              throw new Error(data.message);
+          }
+  
+          const options = {
+              key: data.key_id,
+              amount: data.amount,
+              currency: "INR",
+              name: "Wallet Recharge",
+              description: "Add money to wallet",
+              order_id: data.order_id,
+              handler: async function (response) {
+                  try {
+                      const verifyResponse = await fetch('/wallet/verify-payment', {
+                          method: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify(response)
+                      });
+  
+                      const verifyData = await verifyResponse.json();
+                      
+                      if (verifyData.success) {
+                          window.location.href = `/wallet/payment-success?amount=${amount}`;
+                      } else {
+                          alert('Payment verification failed. Please try again.');
+                          window.location.href = `/wallet/payment-failure?amount=${amount}`;
+                      }
+                  } catch (error) {
+                      console.error('Error:', error);
+                      alert('Payment verification failed. Please try again.');
+                      window.location.href = `/wallet/payment-failure?amount=${amount}`;
+                  }
+              },
+              prefill: {
+                  name: "<%= user.name %>",
+                  email: "<%= user.email %>"
+              },
+              theme: {
+                  color: "#4a5568"
+              }
+          };
+  
+          const rzp = new Razorpay(options);
+          rzp.on('payment.failed', function (response) {
+              window.location.href = `/wallet/payment-failure?amount=${amount}`;
+          });
+          rzp.open();
+          
+          const modal = bootstrap.Modal.getInstance(document.getElementById('addMoneyModal'));
+          modal.hide();
+      } catch (error) {
+          console.error('Error:', error);
+          alert('Failed to initiate payment. Please try again.');
+      }
+  });
+  
+  document.getElementById('withdrawButton').addEventListener('click', async () => {
+      const amount = document.getElementById('withdrawAmount').value;
+      
+      if (!amount || amount < 1) {
+          alert('Please enter a valid amount');
+          return;
+      }
+  
+      try {
+          const response = await fetch('/wallet/withdraw-money', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ amount })
+          });
+  
+          const data = await response.json();
+          
+          if (data.success) {
+              alert('Money withdrawn successfully!');
+              window.location.reload();
+          } else {
+              alert(data.message || 'Failed to withdraw money. Please try again.');
+          }
+      } catch (error) {
+          console.error('Error:', error);
+          alert('Failed to withdraw money. Please try again.');
+      }
+  });
+  </script>
+
+
+<!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     async function updateWalletData() {
         try {
@@ -538,94 +724,204 @@ function setAmount(amount) {
 }
 
 document.getElementById('payButton').addEventListener('click', async () => {
-    const amount = document.getElementById('amount').value;
-    
-    if (!amount || amount < 1) {
-        alert('Please enter a valid amount');
-        return;
+  const amount = document.getElementById('amount').value;
+
+  if (!amount || amount < 1) {
+    alert('Please enter a valid amount');
+    return;
+  }
+
+  try {
+    const response = await fetch('/wallet/create-razorpay-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ amount }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message);
     }
 
-    try {
-        const response = await fetch('/wallet/create-razorpay-order', {
+    const options = {
+      key: data.key_id,
+      amount: data.amount,
+      currency: 'INR',
+      name: 'Wallet Recharge',
+      description: 'Add money to wallet',
+      order_id: data.order_id,
+      handler: async function (response) {
+        try {
+          const verifyResponse = await fetch('/wallet/verify-payment', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ amount })
-        });
+            body: JSON.stringify(response),
+          });
 
-        const data = await response.json();
-        
-        if (!data.success) {
-            throw new Error(data.message);
-        }
+          const verifyData = await verifyResponse.json();
 
-        const options = {
-            key: data.key_id,
-            amount: data.amount,
-            currency: "INR",
-            name: "Wallet Recharge",
-            description: "Add money to wallet",
-            order_id: data.order_id,
-            handler: async function (response) {
-                try {
-                    const verifyResponse = await fetch('/wallet/verify-payment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(response)
-                    });
-
-                    const verifyData = await verifyResponse.json();
-                    
-                    if (verifyData.success) {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Payment successful! Your wallet has been updated.',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.reload();
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Payment verification failed. Please contact support.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Payment verification failed. Please contact support.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            },
-            prefill: {
-                name: "<%= user.name %>",
-                email: "<%= user.email %>"
-            },
-            theme: {
-                color: "#4a5568"
+          if (verifyData.success) {
+            Swal.fire({
+              title: 'Success!',
+              text: 'Payment successful! Your wallet has been updated.',
+              icon: 'success',
+              confirmButtonText: 'OK',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+            });
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Payment verification failed. Please try again.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = `/wallet/payment-failure?amount=${amount}`;
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Payment verification failed. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = `/wallet/payment-failure?amount=${amount}`;
             }
-        };
+          });
+        }
+      },
+      prefill: {
+        name: '<%= user.name %>',
+        email: '<%= user.email %>',
+      },
+      theme: {
+        color: '#4a5568',
+      },
+    };
 
-        const rzp = new Razorpay(options);
-        rzp.open();
-        
-        const modal = bootstrap.Modal.getInstance(document.getElementById('addMoneyModal'));
-        modal.hide();
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function (response) {
+      window.location.href = `/wallet/payment-failure?amount=${amount}`;
+    });
+    rzp.open();
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById('addMoneyModal'));
+    modal.hide();
+  } catch (error) {
+    console.error('Error:', error);
+    Swal.fire({
+      title: 'Error!',
+      text: 'Failed to initiate payment. Please try again.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+    });
+  }
 });
+
+// document.getElementById('payButton').addEventListener('click', async () => {
+//     const amount = document.getElementById('amount').value;
+    
+//     if (!amount || amount < 1) {
+//         alert('Please enter a valid amount');
+//         return;
+//     }
+
+//     try {
+//         const response = await fetch('/wallet/create-razorpay-order', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({ amount })
+//         });
+
+//         const data = await response.json();
+        
+//         if (!data.success) {
+//             throw new Error(data.message);
+//         }
+
+//         const options = {
+//             key: data.key_id,
+//             amount: data.amount,
+//             currency: "INR",
+//             name: "Wallet Recharge",
+//             description: "Add money to wallet",
+//             order_id: data.order_id,
+//             handler: async function (response) {
+//                 try {
+//                     const verifyResponse = await fetch('/wallet/verify-payment', {
+//                         method: 'POST',
+//                         headers: {
+//                             'Content-Type': 'application/json'
+//                         },
+//                         body: JSON.stringify(response)
+//                     });
+
+//                     const verifyData = await verifyResponse.json();
+                    
+//                     if (verifyData.success) {
+//                         Swal.fire({
+//                             title: 'Success!',
+//                             text: 'Payment successful! Your wallet has been updated.',
+//                             icon: 'success',
+//                             confirmButtonText: 'OK'
+//                         }).then((result) => {
+//                             if (result.isConfirmed) {
+//                                 window.location.reload();
+//                             }
+//                         });
+//                     } else {
+//                         Swal.fire({
+//                             title: 'Error!',
+//                             text: 'Payment verification failed. Please contact support.',
+//                             icon: 'error',
+//                             confirmButtonText: 'OK'
+//                         });
+//                     }
+//                 } catch (error) {
+//                     console.error('Error:', error);
+//                     Swal.fire({
+//                         title: 'Error!',
+//                         text: 'Payment verification failed. Please contact support.',
+//                         icon: 'error',
+//                         confirmButtonText: 'OK'
+//                     });
+//                 }
+//             },
+//             prefill: {
+//                 name: "<%= user.name %>",
+//                 email: "<%= user.email %>"
+//             },
+//             theme: {
+//                 color: "#4a5568"
+//             }
+//         };
+
+//         const rzp = new Razorpay(options);
+//         rzp.open();
+        
+//         const modal = bootstrap.Modal.getInstance(document.getElementById('addMoneyModal'));
+//         modal.hide();
+//     } catch (error) {
+//         console.error('Error:', error);
+//     }
+// });
+
+
+
 
 document.getElementById('withdrawButton').addEventListener('click', async () => {
     const amount = document.getElementById('withdrawAmount').value;
@@ -670,6 +966,6 @@ document.getElementById('withdrawButton').addEventListener('click', async () => 
         alert('Failed to withdraw money. Please try again.');
     }
 });
-</script>
+</script> -->
 
 <%- include("../../views/partials/user/footer") %>

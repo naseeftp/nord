@@ -112,6 +112,9 @@ router.get('/wallethistory',userAuth,walletController.getWallethistory)
 router.post('/wallet/create-razorpay-order', userAuth, walletController.createRazorpayOrder);
 router.post('/wallet/verify-payment', userAuth, walletController.verifyPayment);
 router.post('/wallet/withdraw-money', userAuth, walletController.withdrawMoney);
+router.get('/wallet/payment-failure',userAuth,walletController.loadPaymentFailure);
+router.get('/wallet/payment-success',walletController.loadPaymentSuccess)
+
 
 
 router.post('/requestReturn',userAuth,orderController.requestReturn)
@@ -120,7 +123,6 @@ router.post('/check-stock',userAuth, orderController.checkStock);
 router.get('/paymentFailure',userAuth,userController.paymentFailure)
 router.get('/wallet/get-balance',userAuth,walletController.getWalletBalance)
 router.get('/wallet/get-data',userAuth,walletController.getWalletData);
-
 router.get('/getNavCounts', async (req, res) => {
     try {
       const userId = req.session.user;

@@ -293,6 +293,53 @@ const getWalletData = async (req, res) => {
   }
 };
 
+const loadPaymentFailure=async(req,res)=>{
+try {
+  const userId=req.session.user;
+  const userData=await User.findById(userId);
+  const {wishlistCount,cartCount}=await getUserCounts(userId);
+  const failedAmount=req.query.amount||0;
+
+  res.render('paymentFailureWallet',{
+   user:userData,
+   failedAmount,
+   wishlistCount,
+   cartCount
+
+  })
+
+
+} catch (error) {
+  console.error('error while loading payment failuree page:',error)
+  res.status(500).send('internal server error')
+
+}
+}
+
+const  loadPaymentSuccess=async(req,res)=>{
+try {
+  const userId=req.session.user;
+  const userData=await User.findById(userId)
+  const {wishlistCount,cartCount}=await getUserCounts(userId)
+  const addedAmount=req.query.amount||0
+  res.render('walletapymentSucees',{
+  user:userData,
+  addedAmount,
+  wishlistCount,
+  cartCount
+
+  })
+} catch (error) {
+  console.error('error loading in payment success',error);
+  res.status(500).send('internal server error')
+}
+
+
+
+}
+
+
+
 
 module.exports={
     loadWallet,
@@ -301,5 +348,8 @@ module.exports={
     withdrawMoney ,
     getWalletBalance,
     getWalletData,
-    getWallethistory
+    getWallethistory,
+    loadPaymentFailure,
+    loadPaymentSuccess
+    
 }
