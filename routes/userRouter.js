@@ -111,7 +111,6 @@ router.get('/wallet',userAuth, walletController.loadWallet);
 router.get('/wallethistory',userAuth,walletController.getWallethistory)
 router.post('/wallet/create-razorpay-order', userAuth, walletController.createRazorpayOrder);
 router.post('/wallet/verify-payment', userAuth, walletController.verifyPayment);
-router.post('/wallet/withdraw-money', userAuth, walletController.withdrawMoney);
 router.get('/wallet/payment-failure',userAuth,walletController.loadPaymentFailure);
 router.get('/wallet/payment-success',walletController.loadPaymentSuccess)
 

@@ -176,58 +176,7 @@ const verifyPayment = async(req,res)=> {
     }
 }
 
-const withdrawMoney = async (req, res) => {
-    try {
-      const userId = req.session.user
-      const { amount } = req.body
-  
-      if (!amount || amount <= 0) {
-        return res.status(400).json({ success: false, message: "Invalid amount" })
-      }
-  
-      const wallet = await Wallet.findOne({ userId: userId })
-  
-      if (!wallet || wallet.balance < amount) {
-        return res.status(400).json({
-          success: false,
-          message: "Insufficient balance",
-        })
-      }
-  
-      wallet.balance -= Number(amount)
-      wallet.totalDebited += Number(amount)
-      wallet.transactions.push({
-        amount: Number(amount),
-        transactionType: "debit",
-        transactionPurpose: "withdraw",
-        description: "Withdrawn from wallet",
-      })
-  
-      await wallet.save()
-  
-     
-      await Transaction.create({
-        userId: userId,
-        amount: Number(amount),
-        transactionType: "debit",
-        paymentMethod: "wallet",
-        paymentGateway: "wallet",
-        status: "completed",
-        purpose: "wallet_withdraw",
-        description: "Withdrawn from wallet",
-        walletBalanceAfter: wallet.balance,
-      })
-  
-      res.json({
-        success: true,
-        message: "Money withdrawn successfully",
-        newBalance: wallet.balance,
-      })
-    } catch (error) {
-      console.error("Error withdrawing money:", error)
-      res.status(500).json({ success: false, message: "Internal Server Error" })
-    }
-}
+
 
 const getWalletBalance=async(req,res)=>{
 try {
@@ -345,7 +294,7 @@ module.exports={
     loadWallet,
     createRazorpayOrder,
     verifyPayment,
-    withdrawMoney ,
+ 
     getWalletBalance,
     getWalletData,
     getWallethistory,
