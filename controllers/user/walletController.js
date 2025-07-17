@@ -31,6 +31,7 @@ async function getUserCounts(userId) {
     const userData=await User.findById(userId)
     const wallet =await Wallet.findOne({userId:userId})
     const { wishlistCount, cartCount } = await getUserCounts(userId);
+    req.session.paymentCompleted=false;
 
     let transactions=[]
     let totalTransactions=0;
@@ -248,6 +249,10 @@ try {
   const userData=await User.findById(userId);
   const {wishlistCount,cartCount}=await getUserCounts(userId);
   const failedAmount=req.query.amount||0;
+  if(req.session.paymentCompleted)
+    {
+      return res.redirect('/wallet')
+    }
   
 
   res.render('paymentFailureWallet',{
@@ -272,6 +277,7 @@ try {
   const userData=await User.findById(userId)
   const {wishlistCount,cartCount}=await getUserCounts(userId)
   const addedAmount=req.query.amount||0
+  req.session.paymentCompleted = true
   res.render('walletapymentSucees',{
   user:userData,
   addedAmount,
