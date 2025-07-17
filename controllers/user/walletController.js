@@ -248,6 +248,7 @@ try {
   const userData=await User.findById(userId);
   const {wishlistCount,cartCount}=await getUserCounts(userId);
   const failedAmount=req.query.amount||0;
+  
 
   res.render('paymentFailureWallet',{
    user:userData,
@@ -294,7 +295,6 @@ module.exports={
     loadWallet,
     createRazorpayOrder,
     verifyPayment,
- 
     getWalletBalance,
     getWalletData,
     getWallethistory,

@@ -90,10 +90,6 @@ const getUnlistCategory=async(req,res)=>{
     
     };
 
-
-
-
-
 const editCategory = async (req, res) => {
   try {
       const id = req.params.id;
