@@ -415,9 +415,10 @@
               <% orders.forEach((order) => { %>
                 <tr>
                   <td class="order-id">
-                    <a href="/orders/<%= order.orderId %>">
+                    <span title="<%= order.orderId %>">
                       #<%= order.orderId %>
-                    </a>
+                    </span>
+                    
                   </td>
                   <td>
                     <span class="status-badge status-<%= order.status.toLowerCase() %>">
