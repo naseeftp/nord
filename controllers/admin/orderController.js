@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Order = require("../../models/orderSchema");
 const Product = require("../../models/productSchema");
-const Wallet = require("../../models/walletSchema"); // Assuming Wallet schema exists
-const Transaction = require("../../models/transactionSchema"); // Assuming Transaction schema exists
+const Wallet = require("../../models/walletSchema"); 
+const Transaction = require("../../models/transactionSchema");
 
 const getOrderListPageAdmin = async (req, res) => {
     try {
