@@ -67,7 +67,7 @@ const customerunBlocked=async(req,res)=>{
          let id=req.query.id;
          await User.updateOne({_id: id},{$set:{isBlocked:false}})
          res.redirect("/admin/users")
-         res.re
+         
         
     } catch (error) {
        res.redirect("/pageerror");

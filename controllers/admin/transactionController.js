@@ -65,9 +65,6 @@ const getTransactionsDetails=async(req,res)=>{
 
 }
 
-
-
-
 module.exports={
     getAllTransactions,
     getTransactionsDetails

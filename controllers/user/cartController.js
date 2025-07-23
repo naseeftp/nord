@@ -169,41 +169,29 @@ const changeQuantity = async (req, res) => {
   try {
       const { productId, quantity, count, selectedSize } = req.body;
       const userId = req.session.user;
-
-
-      if (!selectedSize) {
+       if (!selectedSize) {
           return res.status(400).json({
               status: false,
               message: "Size not selected"
           });
       }
-
-     
       const cartItems = await Cart.findOne({ userId: userId }).populate("items.productId");
-
       const findItem = cartItems.items.find((item) => item._id.toString() === productId.toString());
-
       if (!findItem) {
           return res.status(404).json({
               status: false,
               message: "Product not found in cart"
           });
       }
-
-      const product = await Product.findById(findItem.productId._id);
-
-      if (!product) {
+     const product = await Product.findById(findItem.productId._id);
+     if (!product) {
           return res.status(404).json({
               status: false,
               message: "Product not found"
           });
       }
-
-    
-      const sizeData = product.sizes.find(size => size.size === selectedSize);
-   
-
-      if (!sizeData) {
+    const sizeData = product.sizes.find(size => size.size === selectedSize);
+    if (!sizeData) {
         return res.status(404).json({
           status: false,
           message: 'Selected size not available.',
@@ -211,10 +199,9 @@ const changeQuantity = async (req, res) => {
         });
       }
 
-const newQuantity = parseInt(findItem.quantity) + parseInt(count);
-
-if (newQuantity > sizeData.quantity) {
-  return res.status(400).json({status:false, message: `Only ${sizeData.quantity} items available in size ${selectedSize}`})
+    const newQuantity = parseInt(findItem.quantity) + parseInt(count);
+    if (newQuantity > sizeData.quantity) {
+    return res.status(400).json({status:false, message: `Only ${sizeData.quantity} items available in size ${selectedSize}`})
 }
 
       findItem.quantity = newQuantity;
