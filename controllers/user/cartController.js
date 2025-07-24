@@ -72,7 +72,6 @@ const addToCart = async (req, res) => {
   try {
     const { productId, selectedSize } = req.body;
     const userId = req.session.user;
-
     if (!userId) {
       return res.json({ status: 'login before adding to the cart' });
     }
